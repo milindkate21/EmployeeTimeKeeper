@@ -1,0 +1,53 @@
+body {
+  font-family: Arial, sans-serif;
+  background-color: #f8f9fa;
+  margin: 0;
+  padding: 0;
+}
+
+.navbar-brand img {
+  width: 60px;
+  height: auto;
+  margin-right: 10px;
+}
+
+.navbar {
+  padding: 0.5rem 1rem;
+}
+
+.navbar .navbar-nav .nav-link {
+  color: #fff;
+}
+
+.navbar .navbar-nav .nav-link:hover {
+  text-decoration: underline;
+}
+
+.navbar-brand span {
+  text-transform: uppercase;
+}
+
+.navbar-collapse {
+  justify-content: flex-end;
+}
+
+.navbar .nav-item {
+  margin: 10px;
+}
+
+/* Add space between the icons and the text */
+.navbar .navbar-nav .nav-link i {
+  margin-right: 5px;
+}
+
+/* For small screens, make navbar links stack vertically */
+@media (max-width: 991.98px) {
+  .navbar-nav {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .navbar-nav .nav-item {
+    margin-right: 0; /* Remove right margin for vertical items */
+  }
+}
