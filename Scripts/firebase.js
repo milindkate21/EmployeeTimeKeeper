@@ -39,6 +39,8 @@ if (submitlogin) {
     const email = document.getElementById("username").value;
     const password = document.getElementById("password").value;
 
+    
+
     event.preventDefault();
 
     const auth = getAuth();
