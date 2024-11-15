@@ -1,4 +1,4 @@
-import { db, ref, get, set } from "./firebase.js";
+import { db, ref, get, set, remove } from "./firebase.js";
 
 $(document).ready(function () {
   let formattedDate = getFormattedCurrentDate();
@@ -53,8 +53,13 @@ document.addEventListener("DOMContentLoaded", function () {
       const empcoworker = document.getElementById("empcoworker").value;
       const empnotes = document.getElementById("notes").value;
 
-      const currentDate = new Date().toLocaleDateString().replace(/\//g, "-"); // Get current date as string (MM/DD/YYYY)
+      const currentDate = new Date(); // Get current date as string (MM/DD/YYYY)
       //const currentDate = new Date().toISOString().split("T")[0];
+      const formattedTime = currentDate.toLocaleTimeString("en-US", {
+        hour: "2-digit",
+        minute: "2-digit",
+        second: "2-digit",
+      });
 
       const UID = generateUID();
 
@@ -62,7 +67,10 @@ document.addEventListener("DOMContentLoaded", function () {
         // Create a reference to the specific document in Firestore
         const employeeRef = ref(
           db,
-          `employees/${userId}/${convertDate(getFormattedCurrentDate())}/${UID}`
+          // `employees/${userId}/${convertDate(getFormattedCurrentDate())}/${UID}`
+          `employees/${convertDate(
+            getFormattedCurrentDate()
+          )}/${userId}//${UID}`
         );
 
         // Set data in the specific document
@@ -72,11 +80,13 @@ document.addEventListener("DOMContentLoaded", function () {
           hoursWorked: emphoursWorked,
           coWorker: empcoworker,
           notes: empnotes,
+          insertedTime: formattedTime,
         });
 
         // Clear form after submission
         employeeForm.reset();
         alert("Employee data submitted successfully!");
+        getEmployeeFormData(convertDate(getFormattedCurrentDate()));
       } catch (e) {
         console.error("Error adding document: ", e);
         alert("Failed to submit data.");
@@ -87,9 +97,9 @@ document.addEventListener("DOMContentLoaded", function () {
 
 //GET Employee Form Data based on Date and uid
 async function getEmployeeFormData(date) {
-  console.log(date);
   const userId = localStorage.getItem("userId");
-  const employeeRef = ref(db, `employees/${userId}/${date}`);
+  // const employeeRef = ref(db, `employees/${userId}/${date}`);
+  const employeeRef = ref(db, `employees/${date}/${userId}`);
 
   try {
     const snapshot = await get(employeeRef);
@@ -97,22 +107,53 @@ async function getEmployeeFormData(date) {
       const employeeData = snapshot.val();
       console.log("Employee Data:", employeeData);
 
+      // Get the table element
+      const tableElement = $("#employeeTable");
+
+      // Destroy existing DataTable instance if it exists
+      if ($.fn.DataTable.isDataTable(tableElement)) {
+        tableElement.DataTable().clear().destroy();
+      }
+
       //binding datatable....
-      const table = $("#employeeTable").DataTable();
+      const table = tableElement.DataTable({
+        scrollX: true,
+        responsive: true,
+      });
+
+      table.clear();
 
       // Loop through each UID entry in the data object
       for (const uid in employeeData) {
         if (employeeData.hasOwnProperty(uid)) {
           const employee = employeeData[uid];
 
+          console.log(date);
+
+          // Format the date to 'Month Day, Year' format
+          const localDate = new Date(date + "T00:00:00");
+          const formattedDate = new Date(localDate).toLocaleDateString(
+            "en-US",
+            {
+              month: "long",
+              day: "numeric",
+              year: "numeric",
+            }
+          );
+
+          console.log(
+            "Ye konsi Date he ....Formatted date--->" + formattedDate
+          );
+
           // Add row with employee data, store UID as a data attribute
           const row = table.row
             .add([
-              date,
+              //date,
+              formattedDate,
               employee.name,
               employee.address,
-              employee.coWorker,
               employee.hoursWorked,
+              employee.coWorker,
               employee.notes,
               `<button class="btn btn-danger delete-btn" data-uid="${uid}">Delete</button>`,
             ])
@@ -134,7 +175,9 @@ async function getEmployeeFormData(date) {
           // Remove the data from Firebase
           const userId = localStorage.getItem("userId"); // Get userId from localStorage
           //const currentDate = new Date().toLocaleDateString(); // Format the current date
-          const employeeRef = ref(db, `employees/${userId}/${date}/${uid}`);
+          const employeeRef = ref(db, `employees/${date}/${userId}/${uid}`);
+
+          console.log("EMployee delete--->" + employeeRef);
 
           remove(employeeRef)
             .then(() => {
@@ -158,8 +201,7 @@ async function getEmployeeFormData(date) {
       });
       //end delete function...
     } else {
-      console.log("No data available for this date and UID.");
-      alert("No data found for the specified date and UID.");
+      //alert("No data found for the specified date and UID.");
     }
   } catch (error) {
     console.error("Error fetching employee data:", error);

@@ -9,6 +9,7 @@ import {
   ref,
   get,
   set,
+  remove,
 } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-database.js";
 
 // Firebase configuration (use environment variables for sensitive data)
@@ -38,8 +39,6 @@ if (submitlogin) {
     // Inputs
     const email = document.getElementById("username").value;
     const password = document.getElementById("password").value;
-
-    
 
     event.preventDefault();
 
@@ -83,4 +82,4 @@ if (submitlogin) {
   });
 }
 
-export { db, ref, get, set };
+export { db, ref, get, set, remove };
