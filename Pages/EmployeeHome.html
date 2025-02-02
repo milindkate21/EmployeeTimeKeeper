@@ -106,46 +106,60 @@
             </div>
           </div>
           <div class="mb-3 row">
-            <label for="address" class="col-sm-2 col-form-label">Address</label>
+            <label for="location" class="col-sm-2 col-form-label"
+              >Location</label
+            >
             <div class="col-sm-8">
               <input
                 type="text"
                 class="form-control"
-                id="empaddress"
-                name="address"
+                id="emplocation"
+                name="location"
                 required
               />
             </div>
           </div>
 
           <div class="mb-3 row">
-            <label for="hoursWorked" class="col-sm-2 col-form-label"
-              >Hours Worked</label
+            <label for="workcompleted" class="col-sm-2 col-form-label"
+              >Work</label
+            >
+            <div class="col-sm-8">
+              <textarea
+                class="form-control"
+                id="empworkcompleted"
+                name="workcompleted"
+                rows="3"
+              ></textarea>
+            </div>
+          </div>
+
+          <div class="mb-3 row">
+            <label for="starttime" class="col-sm-2 col-form-label"
+              >Start Time</label
             >
             <div class="col-sm-8">
               <input
-                type="number"
+                type="time"
+                style="width: 150px"
                 class="form-control"
-                id="hoursWorked"
-                name="hoursWorked"
+                id="starttime"
+                name="starttime"
                 required
-                min="1"
-                pattern="\d+"
-                oninput="this.value = this.value.replace(/[^0-9]/g, '');"
-                title="Please enter a positive integer"
               />
             </div>
           </div>
           <div class="mb-3 row">
-            <label for="coworker" class="col-sm-2 col-form-label"
-              >Co Worker</label
+            <label for="endtime" class="col-sm-2 col-form-label"
+              >End Time</label
             >
             <div class="col-sm-8">
               <input
-                type="text"
+                type="time"
+                style="width: 150px"
                 class="form-control"
-                id="empcoworker"
-                name="coworker"
+                id="endtime"
+                name="endtime"
                 required
               />
             </div>
@@ -183,9 +197,11 @@
               <tr>
                 <th>Date</th>
                 <th>Name</th>
-                <th>Address</th>
+                <th>Location</th>
+                <th>Work</th>
+                <th>Start Time</th>
+                <th>End Time</th>
                 <th>Hours Worked</th>
-                <th>Co Worker</th>
                 <th>Notes</th>
                 <th>Action</th>
               </tr>

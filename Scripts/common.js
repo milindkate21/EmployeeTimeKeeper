@@ -4,9 +4,6 @@ $(document).ready(function () {
   let formattedDate = getFormattedCurrentDate();
   document.getElementById("day").textContent = getFormattedCurrentDate();
 
-  console.log("User role ---->" + localStorage.getItem("userRole"));
-  console.log(convertDate(formattedDate));
-
   getEmployeeFormData(convertDate(formattedDate));
 });
 
@@ -48,9 +45,11 @@ document.addEventListener("DOMContentLoaded", function () {
       const userId = localStorage.getItem("userId");
 
       const empname = document.getElementById("empname").value;
-      const empaddress = document.getElementById("empaddress").value;
-      const emphoursWorked = document.getElementById("hoursWorked").value;
-      const empcoworker = document.getElementById("empcoworker").value;
+      const emplocation = document.getElementById("emplocation").value;
+      const empworkcompleted =
+        document.getElementById("empworkcompleted").value;
+      const empstartTime = document.getElementById("starttime").value;
+      const empendTime = document.getElementById("endtime").value;
       const empnotes = document.getElementById("notes").value;
 
       const currentDate = new Date(); // Get current date as string (MM/DD/YYYY)
@@ -60,6 +59,23 @@ document.addEventListener("DOMContentLoaded", function () {
         minute: "2-digit",
         second: "2-digit",
       });
+
+      //calculate hours from start and end time..
+      let emphoursWorked = 0;
+      if (empstartTime && empendTime) {
+        const start = new Date(`1970-01-01T${empstartTime}:00`);
+        const end = new Date(`1970-01-01T${empendTime}:00`);
+
+        let hoursWorked = (end - start) / (1000 * 60 * 60); // Convert milliseconds to hours
+
+        if (hoursWorked < 0) {
+          hoursWorked += 24; // Handle overnight shifts
+        }
+
+        emphoursWorked = hoursWorked.toFixed(2); // Set the calculated hours in the input field
+      } else {
+        alert("Please enter both Start Time and End Time.");
+      }
 
       const UID = generateUID();
 
@@ -76,9 +92,11 @@ document.addEventListener("DOMContentLoaded", function () {
         // Set data in the specific document
         await set(employeeRef, {
           name: empname,
-          address: empaddress,
+          location: emplocation,
+          workcompleted: empworkcompleted,
+          starttime: convertTo12HourFormat(empstartTime),
+          endtime: convertTo12HourFormat(empendTime),
           hoursWorked: emphoursWorked,
-          coWorker: empcoworker,
           notes: empnotes,
           insertedTime: formattedTime,
         });
@@ -128,8 +146,6 @@ async function getEmployeeFormData(date) {
         if (employeeData.hasOwnProperty(uid)) {
           const employee = employeeData[uid];
 
-          console.log(date);
-
           // Format the date to 'Month Day, Year' format
           const localDate = new Date(date + "T00:00:00");
           const formattedDate = new Date(localDate).toLocaleDateString(
@@ -141,19 +157,16 @@ async function getEmployeeFormData(date) {
             }
           );
 
-          console.log(
-            "Ye konsi Date he ....Formatted date--->" + formattedDate
-          );
-
           // Add row with employee data, store UID as a data attribute
           const row = table.row
             .add([
-              //date,
               formattedDate,
               employee.name,
-              employee.address,
+              employee.location,
+              employee.workcompleted,
+              employee.starttime,
+              employee.endtime,
               employee.hoursWorked,
-              employee.coWorker,
               employee.notes,
               `<button class="btn btn-danger delete-btn" data-uid="${uid}">Delete</button>`,
             ])
@@ -176,8 +189,6 @@ async function getEmployeeFormData(date) {
           const userId = localStorage.getItem("userId"); // Get userId from localStorage
           //const currentDate = new Date().toLocaleDateString(); // Format the current date
           const employeeRef = ref(db, `employees/${date}/${userId}/${uid}`);
-
-          console.log("EMployee delete--->" + employeeRef);
 
           remove(employeeRef)
             .then(() => {
@@ -242,4 +253,12 @@ function getFormattedCurrentDate() {
   const currentDate = new Date();
   const options = { day: "numeric", month: "long", year: "numeric" };
   return currentDate.toLocaleDateString("en-US", options);
+}
+
+function convertTo12HourFormat(time) {
+  let [hours, minutes] = time.split(":");
+  hours = parseInt(hours);
+  let period = hours >= 12 ? "PM" : "AM";
+  hours = hours % 12 || 12; // Convert 0 to 12 for midnight
+  return `${hours}:${minutes} ${period}`;
 }

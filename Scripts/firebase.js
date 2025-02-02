@@ -14,14 +14,13 @@ import {
 
 // Firebase configuration (use environment variables for sensitive data)
 const firebaseConfig = {
-  apiKey: "AIzaSyA4RAefu8ga-xH3aeSRjpDJ-rtKXZr5f1s",
-  authDomain: "dragonflyservices-86bf8.firebaseapp.com",
-  databaseURL: "https://dragonflyservices-86bf8-default-rtdb.firebaseio.com", // Add the Realtime Database URL
-  projectId: "dragonflyservices-86bf8",
-  storageBucket: "dragonflyservices-86bf8.appspot.com",
-  messagingSenderId: "61073302201",
-  appId: "1:61073302201:web:8b0337d6b95c03ae173168",
-  measurementId: "G-D7M0Q9B44J",
+  apiKey: "AIzaSyArU6PEyblnb7RV0jYJh5OShtc1_hMs8BM",
+  authDomain: "dragonflytimesheet.firebaseapp.com",
+  projectId: "dragonflytimesheet",
+  storageBucket: "dragonflytimesheet.firebasestorage.app",
+  messagingSenderId: "93677915002",
+  appId: "1:93677915002:web:90759e5841dd2e0337a4c3",
+  measurementId: "G-9809N8YMW5",
 };
 
 // Initialize Firebase
@@ -50,6 +49,9 @@ if (submitlogin) {
 
         // Fetch user data from Realtime Database
         const userRef = ref(db, "users/" + user.uid);
+
+        console.log(userRef);
+
         get(userRef)
           .then((snapshot) => {
             if (snapshot.exists()) {

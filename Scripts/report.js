@@ -91,12 +91,13 @@ async function populateTable(selectedDate) {
               // Add row with employee data, store UID as a data attribute
               const row = table.row
                 .add([
-                  //date,
                   selectedDate,
                   individualRecord.name || "",
-                  individualRecord.address || "",
+                  individualRecord.location || "",
+                  individualRecord.workcompleted || "",
+                  individualRecord.starttime || "",
+                  individualRecord.endtime || "",
                   individualRecord.hoursWorked || 0,
-                  individualRecord.coWorker || "",
                   individualRecord.notes || "",
                   individualRecord.insertedTime || "",
                 ])
@@ -110,7 +111,6 @@ async function populateTable(selectedDate) {
         }
       }
     } else {
-      //alert("No data found for the specified date and UID.");
       tableElement.DataTable().clear().draw(false);
     }
   } catch (error) {
@@ -119,10 +119,8 @@ async function populateTable(selectedDate) {
 }
 
 function formatDateToYYYYMMDD(date) {
-  // Parse the date string into a Date object
   const formateddate = new Date(date);
 
-  // Check if the date is valid
   if (isNaN(formateddate)) {
     console.error("Invalid date format");
     return null;
