@@ -3,6 +3,7 @@ import { getAnalytics } from "https://www.gstatic.com/firebasejs/11.0.1/firebase
 import {
   getAuth,
   signInWithEmailAndPassword,
+  onAuthStateChanged,
 } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-auth.js";
 import {
   getDatabase, // Import Realtime Database
@@ -14,13 +15,13 @@ import {
 
 // Firebase configuration (use environment variables for sensitive data)
 const firebaseConfig = {
-  apiKey: "AIzaSyArU6PEyblnb7RV0jYJh5OShtc1_hMs8BM",
-  authDomain: "dragonflytimesheet.firebaseapp.com",
-  projectId: "dragonflytimesheet",
-  storageBucket: "dragonflytimesheet.firebasestorage.app",
-  messagingSenderId: "93677915002",
-  appId: "1:93677915002:web:90759e5841dd2e0337a4c3",
-  measurementId: "G-9809N8YMW5",
+  apiKey: "AIzaSyAq6b4Y26h8bqO4LbeahGYXjuL-sluZc8U",
+  authDomain: "employeetimesheetdemo.firebaseapp.com",
+  projectId: "employeetimesheetdemo",
+  storageBucket: "employeetimesheetdemo.firebasestorage.app",
+  messagingSenderId: "864588906259",
+  appId: "1:864588906259:web:6e0ab3c1ff73add281e4e6",
+  measurementId: "G-YXBQ3GJP25",
 };
 
 // Initialize Firebase
@@ -50,7 +51,7 @@ if (submitlogin) {
         // Fetch user data from Realtime Database
         const userRef = ref(db, "users/" + user.uid);
 
-        console.log(userRef);
+        console.log("User Reference" + userRef);
 
         get(userRef)
           .then((snapshot) => {
@@ -84,4 +85,4 @@ if (submitlogin) {
   });
 }
 
-export { db, ref, get, set, remove };
+export { db, ref, get, set, remove, getAuth, onAuthStateChanged };

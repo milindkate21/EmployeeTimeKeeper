@@ -1,10 +1,33 @@
-import { db, ref, get, set, remove } from "./firebase.js";
+import {
+  db,
+  ref,
+  get,
+  set,
+  remove,
+  getAuth,
+  onAuthStateChanged,
+} from "./firebase.js";
 
-$(document).ready(function () {
-  let formattedDate = getFormattedCurrentDate();
-  document.getElementById("day").textContent = getFormattedCurrentDate();
+let table; // Declare table variable globally
 
-  getEmployeeFormData(convertDate(formattedDate));
+onAuthStateChanged(getAuth(), (user) => {
+  if (user) {
+    // Now that the user is authenticated, proceed with your logic
+    $(document).ready(function () {
+      let formattedDate = getFormattedCurrentDate();
+
+      const dayElement = document.getElementById("day");
+
+      if (dayElement) {
+        dayElement.textContent = getFormattedCurrentDate(); // Safely set the textContent
+      }
+
+      getEmployeeFormData(convertDate(formattedDate));
+    });
+  } else {
+    console.error("User is not logged in. Permission denied.");
+    window.location.href = "/Pages/Login.html"; // Redirect to login if not logged in
+  }
 });
 
 document.addEventListener("DOMContentLoaded", function () {
@@ -41,8 +64,17 @@ document.addEventListener("DOMContentLoaded", function () {
     employeeForm.addEventListener("submit", async (event) => {
       event.preventDefault();
 
+      const auth = getAuth();
+      const user = auth.currentUser;
+
+      if (!user) {
+        console.error("User is not logged in. Permission denied.");
+        return;
+      }
+
       // Get form data
-      const userId = localStorage.getItem("userId");
+      //const userId = localStorage.getItem("userId");
+      const userId = user.uid;
 
       const empname = document.getElementById("empname").value;
       const emplocation = document.getElementById("emplocation").value;
@@ -84,9 +116,7 @@ document.addEventListener("DOMContentLoaded", function () {
         const employeeRef = ref(
           db,
           // `employees/${userId}/${convertDate(getFormattedCurrentDate())}/${UID}`
-          `employees/${convertDate(
-            getFormattedCurrentDate()
-          )}/${userId}//${UID}`
+          `employees/${convertDate(getFormattedCurrentDate())}/${userId}/${UID}`
         );
 
         // Set data in the specific document
@@ -106,7 +136,7 @@ document.addEventListener("DOMContentLoaded", function () {
         alert("Employee data submitted successfully!");
         getEmployeeFormData(convertDate(getFormattedCurrentDate()));
       } catch (e) {
-        console.error("Error adding document: ", e);
+        console.error("Error adding document: ", e.message);
         alert("Failed to submit data.");
       }
     });
@@ -115,12 +145,27 @@ document.addEventListener("DOMContentLoaded", function () {
 
 //GET Employee Form Data based on Date and uid
 async function getEmployeeFormData(date) {
-  const userId = localStorage.getItem("userId");
+  const auth = getAuth();
+
+  const user = auth.currentUser;
+
+  if (!user) {
+    console.error("User is not logged in. Permission denied.");
+    return;
+  }
+
+  const userId = user.uid;
+
+  //const userId = localStorage.getItem("userId");
+
+  console.log("user id ----> " + userId);
+
   // const employeeRef = ref(db, `employees/${userId}/${date}`);
   const employeeRef = ref(db, `employees/${date}/${userId}`);
 
   try {
     const snapshot = await get(employeeRef);
+
     if (snapshot.exists()) {
       const employeeData = snapshot.val();
       console.log("Employee Data:", employeeData);
@@ -134,7 +179,7 @@ async function getEmployeeFormData(date) {
       }
 
       //binding datatable....
-      const table = tableElement.DataTable({
+      table = tableElement.DataTable({
         scrollX: true,
         responsive: true,
       });
@@ -145,6 +190,8 @@ async function getEmployeeFormData(date) {
       for (const uid in employeeData) {
         if (employeeData.hasOwnProperty(uid)) {
           const employee = employeeData[uid];
+
+          console.log(employee);
 
           // Format the date to 'Month Day, Year' format
           const localDate = new Date(date + "T00:00:00");
@@ -168,49 +215,15 @@ async function getEmployeeFormData(date) {
               employee.endtime,
               employee.hoursWorked,
               employee.notes,
-              `<button class="btn btn-danger delete-btn" data-uid="${uid}">Delete</button>`,
+              `<button class="btn btn-danger delete-btn" data-uid="${uid}" data-date="${date}">Delete</button>`,
             ])
             .draw()
             .node();
 
           // Set UID as a data attribute for the row
-          $(row).attr("data-uid", uid);
+          $(row).attr("data-uid", uid).attr("data-date", date);
         }
       }
-
-      //Delete Employee Form Data
-      // Event listener for delete button click
-      $("#employeeTable tbody").on("click", ".delete-btn", function () {
-        const uid = $(this).data("uid");
-
-        // Confirm deletion
-        if (confirm("Are you sure you want to delete this record?")) {
-          // Remove the data from Firebase
-          const userId = localStorage.getItem("userId"); // Get userId from localStorage
-          //const currentDate = new Date().toLocaleDateString(); // Format the current date
-          const employeeRef = ref(db, `employees/${date}/${userId}/${uid}`);
-
-          remove(employeeRef)
-            .then(() => {
-              // If deletion is successful, remove the row from DataTable
-              table
-                .rows()
-                .every(function () {
-                  const rowNode = this.node();
-                  if ($(rowNode).attr("data-uid") === uid) {
-                    this.remove(); // Remove row from DataTable
-                  }
-                })
-                .draw();
-              alert("Record deleted successfully.");
-            })
-            .catch((error) => {
-              console.error("Error deleting document: ", error);
-              alert("Failed to delete the record.");
-            });
-        }
-      });
-      //end delete function...
     } else {
       //alert("No data found for the specified date and UID.");
     }
@@ -218,6 +231,41 @@ async function getEmployeeFormData(date) {
     console.error("Error fetching employee data:", error);
   }
 }
+
+//Delete Employee Form Data
+// Event listener for delete button click
+$("#employeeTable tbody").on("click", ".delete-btn", function () {
+  const uid = $(this).data("uid");
+  const date = $(this).data("date");
+
+  // Confirm deletion
+  if (confirm("Are you sure you want to delete this record?")) {
+    // Remove the data from Firebase
+    const userId = localStorage.getItem("userId"); // Get userId from localStorage
+    //const currentDate = new Date().toLocaleDateString(); // Format the current date
+    const employeeRef = ref(db, `employees/${date}/${userId}/${uid}`);
+
+    remove(employeeRef)
+      .then(() => {
+        // If deletion is successful, remove the row from DataTable
+        table
+          .rows()
+          .every(function () {
+            const rowNode = this.node();
+            if ($(rowNode).attr("data-uid") === uid) {
+              this.remove(); // Remove row from DataTable
+            }
+          })
+          .draw();
+        alert("Record deleted successfully.");
+      })
+      .catch((error) => {
+        console.error("Error deleting document: ", error);
+        alert("Failed to delete the record.");
+      });
+  }
+});
+//end delete function...
 
 //.....................End.....................//
 

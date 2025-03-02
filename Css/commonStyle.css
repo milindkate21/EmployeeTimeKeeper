@@ -83,13 +83,23 @@
 
 /* Ensure the table is fully responsive */
 table.dataTable {
-  width: 100% !important; /* Make the table full width */
+  width: 100% !important;
+}
+
+@media (min-width: 768px) {
+  #employeeForm #starttime,
+  #employeeForm #endtime {
+    width: 150px !important; /* Ensures the width is applied */
+  }
 }
 
 /* Add custom styling to prevent horizontal overflow issues */
 @media (max-width: 767px) {
   .dataTables_wrapper {
     overflow-x: auto;
+  }
+  .custom-toolbar {
+    margin: 10px;
   }
 }
 .dataTables_filter {

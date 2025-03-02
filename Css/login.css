@@ -11,6 +11,11 @@
 
 body {
   background: #ecf0f3;
+  font-family: "Poppins", sans-serif;
+  height: 100vh; /* Full screen height */
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 
 .wrapper {
@@ -21,6 +26,12 @@ body {
   background-color: #ecf0f3;
   border-radius: 15px;
   box-shadow: 13px 13px 20px #cbced1, -13px -13px 20px #fff;
+  /* Center the form vertically and horizontally */
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
 }
 
 .logo {
@@ -93,9 +104,49 @@ body {
   color: #039be5;
 }
 
+/* Media Queries for smaller screens */
+@media (max-width: 480px) {
+  .wrapper {
+    margin: 20px;
+    padding: 30px 20px;
+  }
+
+  .logo img {
+    height: 70px;
+  }
+
+  .wrapper .name {
+    font-size: 1.2rem;
+  }
+
+  .wrapper .form-field input {
+    font-size: 1rem;
+    padding: 8px 12px;
+  }
+
+  .wrapper .btn {
+    height: 45px;
+    font-size: 1rem;
+  }
+}
+
 @media (max-width: 380px) {
   .wrapper {
-    margin: 30px 20px;
-    padding: 40px 15px 15px 15px;
+    margin: 20px 10px;
+    padding: 30px 15px;
+  }
+
+  .wrapper .name {
+    font-size: 1rem;
+  }
+
+  .wrapper .form-field input {
+    font-size: 1rem;
+    padding: 8px 10px;
+  }
+
+  .wrapper .btn {
+    height: 45px;
+    font-size: 1rem;
   }
 }
