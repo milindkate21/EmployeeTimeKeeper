@@ -61,6 +61,7 @@ if (submitlogin) {
               console.log("User role ---->" + userData.role);
               localStorage.setItem("userRole", userData.role);
               localStorage.setItem("userId", user.uid);
+              localStorage.setItem("username", userData.username);
 
               if (userData.role === "admin") {
                 window.location.href = "/Pages/Home.html";

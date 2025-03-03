@@ -94,10 +94,58 @@
       <div class="container mt-5">
         <h2 class="formHeader">Timesheet Form</h2>
         <form id="employeeForm">
-          <div class="mb-3 row">
+          <div class="mb-3 row" style="border: 1px solid red">
             <label for="day" class="col-sm-2 col-form-label">Date</label>
             <div class="col-sm-8">
               <label id="day" class="form-control-plaintext"></label>
+            </div>
+          </div>
+          <div class="mb-3 row" style="border: 1px solid red">
+            <div class="form-check col-sm-2">
+              <input
+                type="checkbox"
+                class="form-check-input"
+                id="kilocheckbox"
+              />
+              <label class="form-check-label" for="kilocheckbox"
+                >Track Kilometers</label
+              >
+            </div>
+            <div id="optionsContainer" class="disabled">
+              <div class="form-check">
+                <input
+                  class="form-check-input"
+                  type="radio"
+                  name="radioGroup"
+                  id="startkm"
+                  value="startkm"
+                  disabled
+                />
+                <label class="form-check-label" for="startkm">
+                  Start Kilometer
+                </label>
+              </div>
+              <div class="form-check">
+                <input
+                  class="form-check-input"
+                  type="radio"
+                  name="radioGroup"
+                  id="endkm"
+                  value="endkm"
+                  disabled
+                />
+                <label class="form-check-label" for="endkm">
+                  End Kilometer
+                </label>
+              </div>
+              <div>
+                <input
+                  type="number"
+                  class="form-check-input"
+                  id="kmnumber"
+                  disabled
+                />
+              </div>
             </div>
           </div>
           <div class="mb-3 row">
@@ -206,6 +254,8 @@
                 <th>Client Name</th>
                 <th>Location</th>
                 <th>Work</th>
+                <th>Start Km</th>
+                <th>End Km</th>
                 <th>Start Time</th>
                 <th>End Time</th>
                 <th>Hours Worked</th>

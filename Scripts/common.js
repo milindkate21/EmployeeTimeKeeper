@@ -14,6 +14,23 @@ onAuthStateChanged(getAuth(), (user) => {
   if (user) {
     // Now that the user is authenticated, proceed with your logic
     $(document).ready(function () {
+      //code for checkbox logic...
+      $("#kilocheckbox").change(function () {
+        if ($(this).is(":checked")) {
+          $("#optionsContainer").removeClass("disabled");
+          $("#optionsContainer input").prop("disabled", false);
+          $("#empname, #emplocation").prop("disabled", true);
+        } else {
+          $("#optionsContainer").addClass("disabled");
+          $("#optionsContainer input").prop("disabled", true);
+          $("#empname, #emplocation").prop("disabled", false);
+
+          // Clear selections and text when unchecked
+          $("input[name='radioGroup']").prop("checked", false);
+          $("#kmnumber").val("");
+        }
+      });
+
       let formattedDate = getFormattedCurrentDate();
 
       const dayElement = document.getElementById("day");
@@ -76,13 +93,38 @@ document.addEventListener("DOMContentLoaded", function () {
       //const userId = localStorage.getItem("userId");
       const userId = user.uid;
 
-      const empname = document.getElementById("empname").value;
-      const emplocation = document.getElementById("emplocation").value;
+      const kilocheckbox = document.getElementById("kilocheckbox");
+      const empname = kilocheckbox.checked
+        ? ""
+        : document.getElementById("empname").value;
+      const emplocation = kilocheckbox.checked
+        ? ""
+        : document.getElementById("emplocation").value;
       const empworkcompleted =
         document.getElementById("empworkcompleted").value;
       const empstartTime = document.getElementById("starttime").value;
       const empendTime = document.getElementById("endtime").value;
       const empnotes = document.getElementById("notes").value;
+      const kiloNumber = document.getElementById("kmnumber");
+
+      // Capture radio button value only if checkbox is checked
+      let selectedRadioValue = "";
+      let startKilometer = "";
+      let endKilometer = "";
+      if (kilocheckbox.checked) {
+        const selectedRadio = document.querySelector(
+          'input[name="radioGroup"]:checked'
+        );
+        selectedRadioValue = selectedRadio ? selectedRadio.value : ""; // Get selected value or empty if none
+
+        // Assign values based on radio selection
+        if (selectedRadioValue === "startkm") {
+          startKilometer = kiloNumber.value;
+        } else if (selectedRadioValue === "endkm") {
+          endKilometer = kiloNumber.value;
+        }
+      }
+      const username = localStorage.getItem("username");
 
       const currentDate = new Date(); // Get current date as string (MM/DD/YYYY)
       //const currentDate = new Date().toISOString().split("T")[0];
@@ -124,11 +166,14 @@ document.addEventListener("DOMContentLoaded", function () {
           name: empname,
           location: emplocation,
           workcompleted: empworkcompleted,
+          startkilometer: startKilometer,
+          endkilometer: endKilometer,
           starttime: convertTo12HourFormat(empstartTime),
           endtime: convertTo12HourFormat(empendTime),
           hoursWorked: emphoursWorked,
           notes: empnotes,
           insertedTime: formattedTime,
+          addedby: username,
         });
 
         // Clear form after submission
@@ -155,10 +200,6 @@ async function getEmployeeFormData(date) {
   }
 
   const userId = user.uid;
-
-  //const userId = localStorage.getItem("userId");
-
-  console.log("user id ----> " + userId);
 
   // const employeeRef = ref(db, `employees/${userId}/${date}`);
   const employeeRef = ref(db, `employees/${date}/${userId}`);
@@ -211,6 +252,8 @@ async function getEmployeeFormData(date) {
               employee.name,
               employee.location,
               employee.workcompleted,
+              employee.startkilometer,
+              employee.endkilometer,
               employee.starttime,
               employee.endtime,
               employee.hoursWorked,

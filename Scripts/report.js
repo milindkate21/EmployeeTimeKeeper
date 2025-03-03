@@ -291,11 +291,14 @@ async function populateTable(fromDate, toDate) {
                       individualRecord.name || "",
                       individualRecord.location || "",
                       individualRecord.workcompleted || "",
+                      individualRecord.startkilometer || "",
+                      individualRecord.endkilometer || "",
                       individualRecord.starttime || "",
                       individualRecord.endtime || "",
                       individualRecord.hoursWorked || 0,
                       individualRecord.notes || "",
                       individualRecord.insertedTime || "",
+                      individualRecord.addedby || "",
                     ])
                     .draw()
                     .node();
