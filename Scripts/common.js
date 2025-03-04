@@ -20,6 +20,8 @@ onAuthStateChanged(getAuth(), (user) => {
           $("#optionsContainer").removeClass("disabled");
           $("#optionsContainer input").prop("disabled", false);
           $("#empname, #emplocation").prop("disabled", true);
+          $("#empname").val("");
+          $("#emplocation").val("");
         } else {
           $("#optionsContainer").addClass("disabled");
           $("#optionsContainer input").prop("disabled", true);
@@ -89,8 +91,6 @@ document.addEventListener("DOMContentLoaded", function () {
         return;
       }
 
-      // Get form data
-      //const userId = localStorage.getItem("userId");
       const userId = user.uid;
 
       const kilocheckbox = document.getElementById("kilocheckbox");
@@ -115,6 +115,13 @@ document.addEventListener("DOMContentLoaded", function () {
         const selectedRadio = document.querySelector(
           'input[name="radioGroup"]:checked'
         );
+
+        if (!selectedRadio) {
+          return alert(
+            "Please select either 'Start Kilometer' or 'End Kilometer'."
+          );
+        }
+
         selectedRadioValue = selectedRadio ? selectedRadio.value : ""; // Get selected value or empty if none
 
         // Assign values based on radio selection
@@ -122,6 +129,17 @@ document.addEventListener("DOMContentLoaded", function () {
           startKilometer = kiloNumber.value;
         } else if (selectedRadioValue === "endkm") {
           endKilometer = kiloNumber.value;
+        }
+
+        if (!kiloNumber.value.trim()) {
+          return alert("Please enter a value for Kilometers.");
+        }
+      } else {
+        if (!empname) {
+          return alert("Please enter a client name.");
+        }
+        if (!emplocation) {
+          return alert("Please enter a location.");
         }
       }
       const username = localStorage.getItem("username");
@@ -148,7 +166,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
         emphoursWorked = hoursWorked.toFixed(2); // Set the calculated hours in the input field
       } else {
-        alert("Please enter both Start Time and End Time.");
+        return alert("Please enter both Start Time and End Time.");
       }
 
       const UID = generateUID();
@@ -209,7 +227,6 @@ async function getEmployeeFormData(date) {
 
     if (snapshot.exists()) {
       const employeeData = snapshot.val();
-      console.log("Employee Data:", employeeData);
 
       // Get the table element
       const tableElement = $("#employeeTable");
@@ -225,6 +242,10 @@ async function getEmployeeFormData(date) {
         responsive: true,
       });
 
+      $(window).on("resize", function () {
+        table.columns.adjust().responsive.recalc();
+      });
+
       table.clear();
 
       // Loop through each UID entry in the data object
@@ -232,14 +253,12 @@ async function getEmployeeFormData(date) {
         if (employeeData.hasOwnProperty(uid)) {
           const employee = employeeData[uid];
 
-          console.log(employee);
-
           // Format the date to 'Month Day, Year' format
           const localDate = new Date(date + "T00:00:00");
           const formattedDate = new Date(localDate).toLocaleDateString(
             "en-US",
             {
-              month: "long",
+              month: "short",
               day: "numeric",
               year: "numeric",
             }

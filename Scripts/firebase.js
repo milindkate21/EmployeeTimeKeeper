@@ -14,15 +14,27 @@ import {
 } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-database.js";
 
 // Firebase configuration (use environment variables for sensitive data)
+// const firebaseConfig = {
+//   apiKey: "AIzaSyAq6b4Y26h8bqO4LbeahGYXjuL-sluZc8U",
+//   authDomain: "employeetimesheetdemo.firebaseapp.com",
+//   projectId: "employeetimesheetdemo",
+//   storageBucket: "employeetimesheetdemo.firebasestorage.app",
+//   messagingSenderId: "864588906259",
+//   appId: "1:864588906259:web:6e0ab3c1ff73add281e4e6",
+//   measurementId: "G-YXBQ3GJP25",
+// };
+
+//Testing purpose connection start ----
 const firebaseConfig = {
-  apiKey: "AIzaSyAq6b4Y26h8bqO4LbeahGYXjuL-sluZc8U",
-  authDomain: "employeetimesheetdemo.firebaseapp.com",
-  projectId: "employeetimesheetdemo",
-  storageBucket: "employeetimesheetdemo.firebasestorage.app",
-  messagingSenderId: "864588906259",
-  appId: "1:864588906259:web:6e0ab3c1ff73add281e4e6",
-  measurementId: "G-YXBQ3GJP25",
+  apiKey: "AIzaSyAN7_DJKfesa99kwPDyWOXj3LncA2Ye4X8",
+  authDomain: "testingtimesheet-ae67a.firebaseapp.com",
+  projectId: "testingtimesheet-ae67a",
+  storageBucket: "testingtimesheet-ae67a.firebasestorage.app",
+  messagingSenderId: "123762253279",
+  appId: "1:123762253279:web:fe472a348b76136b80f86a",
+  measurementId: "G-YEDT86GR69",
 };
+//Testing purpose connection end ----
 
 // Initialize Firebase
 const app = initializeApp(firebaseConfig);

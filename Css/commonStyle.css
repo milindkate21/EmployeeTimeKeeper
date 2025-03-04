@@ -86,6 +86,10 @@ table.dataTable {
   width: 100% !important;
 }
 
+#kmnumber {
+  width: 20px;
+}
+
 @media (min-width: 768px) {
   #employeeForm #starttime,
   #employeeForm #endtime {
