@@ -6,7 +6,7 @@ import {
   onAuthStateChanged,
 } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-auth.js";
 import {
-  getDatabase, // Import Realtime Database
+  getDatabase,
   ref,
   get,
   set,
@@ -63,14 +63,10 @@ if (submitlogin) {
         // Fetch user data from Realtime Database
         const userRef = ref(db, "users/" + user.uid);
 
-        console.log("User Reference" + userRef);
-
         get(userRef)
           .then((snapshot) => {
             if (snapshot.exists()) {
               const userData = snapshot.val();
-              // Store user role in localStorage
-              console.log("User role ---->" + userData.role);
               localStorage.setItem("userRole", userData.role);
               localStorage.setItem("userId", user.uid);
               localStorage.setItem("username", userData.username);

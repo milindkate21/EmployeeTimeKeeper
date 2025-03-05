@@ -33,7 +33,6 @@ onAuthStateChanged(getAuth(), (user) => {
       });
 
       initializeDatepicker("#toDateField", function (toDate) {
-        // $("#fromDateField").datepicker("option", "maxDate", toDate);
         updateTable();
       });
 
@@ -57,7 +56,7 @@ onAuthStateChanged(getAuth(), (user) => {
     });
   } else {
     console.error("User is not logged in. Permission denied.");
-    window.location.href = "/Pages/Login.html"; // Redirect to login if not logged in
+    window.location.href = "/Pages/Login.html";
   }
 });
 
@@ -83,11 +82,11 @@ async function populateTable(fromDate, toDate) {
     const table = tableElement.DataTable({
       responsive: true,
       scrollX: true,
-      order: [[0, "asc"]], // Sorting by first column (date) in ascending order
+      order: [[0, "asc"]],
       columnDefs: [
         {
-          targets: 0, // Date column index
-          type: "date", // Ensure it is treated as a date column
+          targets: 0,
+          type: "date",
         },
       ],
       dom: 'l<"toolbar">Bfrtip',
@@ -125,7 +124,6 @@ async function populateTable(fromDate, toDate) {
 
     table.clear();
 
-    // Loop through dates from 'fromDate' to 'toDate'
     let currentDate = new Date(fromDate);
     let endDate = new Date(toDate);
 
@@ -152,7 +150,6 @@ async function populateTable(fromDate, toDate) {
                 if (employee.hasOwnProperty(recordEmp)) {
                   const individualRecord = employee[recordEmp];
 
-                  // Add row with employee data, store UID as a data attribute
                   const row = table.row
                     .add([
                       formatDateToShortFormat(formattedDate),
@@ -171,7 +168,6 @@ async function populateTable(fromDate, toDate) {
                     .draw()
                     .node();
 
-                  // Set UID as a data attribute for the row
                   $(row).attr("data-uid", uid);
                 }
               }
@@ -182,7 +178,6 @@ async function populateTable(fromDate, toDate) {
         console.error(`Error fetching data for ${formattedDate}:`, error);
       }
 
-      // Move to the next date
       currentDate.setDate(currentDate.getDate() + 1);
     }
   } catch (error) {
@@ -199,7 +194,7 @@ function formatDateToYYYYMMDD(date) {
   }
 
   const year = formateddate.getFullYear();
-  const month = String(formateddate.getMonth() + 1).padStart(2, "0"); // Months are 0-based
+  const month = String(formateddate.getMonth() + 1).padStart(2, "0");
   const day = String(formateddate.getDate()).padStart(2, "0");
 
   return `${year}-${month}-${day}`;
@@ -208,12 +203,12 @@ function formatDateToYYYYMMDD(date) {
 function formatDateToLongFormat(date) {
   const dateObj = new Date(date);
   const options = { year: "numeric", month: "long", day: "numeric" };
-  return dateObj.toLocaleDateString("en-US", options); // Nov 14, 2024
+  return dateObj.toLocaleDateString("en-US", options); // November 14, 2024
 }
 
 function formatDateToShortFormat(date) {
-  const [year, month, day] = date.split("-").map(Number); // Extract year, month, day
-  const dateObj = new Date(year, month - 1, day); // Months are 0-based in JS Date
+  const [year, month, day] = date.split("-").map(Number);
+  const dateObj = new Date(year, month - 1, day);
 
   const options = { year: "numeric", month: "short", day: "numeric" };
   return dateObj.toLocaleDateString("en-US", options);
@@ -221,7 +216,7 @@ function formatDateToShortFormat(date) {
 
 function getFormattedFilename() {
   let today = new Date();
-  let month = today.toLocaleString("en-US", { month: "short" }); // Short month name
+  let month = today.toLocaleString("en-US", { month: "short" });
   let day = today.getDate();
   let year = today.getFullYear();
   return `Report_${month}_${day}_${year}`;

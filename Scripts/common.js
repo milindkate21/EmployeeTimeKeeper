@@ -8,13 +8,11 @@ import {
   onAuthStateChanged,
 } from "./firebase.js";
 
-let table; // Declare table variable globally
+let table;
 
 onAuthStateChanged(getAuth(), (user) => {
   if (user) {
-    // Now that the user is authenticated, proceed with your logic
     $(document).ready(function () {
-      //code for checkbox logic...
       $("#kilocheckbox").change(function () {
         if ($(this).is(":checked")) {
           $("#optionsContainer").removeClass("disabled");
@@ -26,8 +24,6 @@ onAuthStateChanged(getAuth(), (user) => {
           $("#optionsContainer").addClass("disabled");
           $("#optionsContainer input").prop("disabled", true);
           $("#empname, #emplocation").prop("disabled", false);
-
-          // Clear selections and text when unchecked
           $("input[name='radioGroup']").prop("checked", false);
           $("#kmnumber").val("");
         }
@@ -38,14 +34,14 @@ onAuthStateChanged(getAuth(), (user) => {
       const dayElement = document.getElementById("day");
 
       if (dayElement) {
-        dayElement.textContent = getFormattedCurrentDate(); // Safely set the textContent
+        dayElement.textContent = getFormattedCurrentDate();
       }
 
       getEmployeeFormData(convertDate(formattedDate));
     });
   } else {
     console.error("User is not logged in. Permission denied.");
-    window.location.href = "/Pages/Login.html"; // Redirect to login if not logged in
+    window.location.href = "/Pages/Login.html";
   }
 });
 
@@ -75,8 +71,6 @@ document.addEventListener("DOMContentLoaded", function () {
     preventBackNavigation();
   }
 
-  //.....................Start.....................//
-  //Save Employee Form data
   // Form submission event
   const employeeForm = document.getElementById("employeeForm");
   if (employeeForm) {
@@ -107,7 +101,6 @@ document.addEventListener("DOMContentLoaded", function () {
       const empnotes = document.getElementById("notes").value;
       const kiloNumber = document.getElementById("kmnumber");
 
-      // Capture radio button value only if checkbox is checked
       let selectedRadioValue = "";
       let startKilometer = "";
       let endKilometer = "";
@@ -122,13 +115,12 @@ document.addEventListener("DOMContentLoaded", function () {
           );
         }
 
-        selectedRadioValue = selectedRadio ? selectedRadio.value : ""; // Get selected value or empty if none
+        selectedRadioValue = selectedRadio ? selectedRadio.value : "";
 
-        // Assign values based on radio selection
         if (selectedRadioValue === "startkm") {
-          startKilometer = kiloNumber.value;
+          startKilometer = formatKilometers(kiloNumber.value);
         } else if (selectedRadioValue === "endkm") {
-          endKilometer = kiloNumber.value;
+          endKilometer = formatKilometers(kiloNumber.value);
         }
 
         if (!kiloNumber.value.trim()) {
@@ -144,27 +136,16 @@ document.addEventListener("DOMContentLoaded", function () {
       }
       const username = localStorage.getItem("username");
 
-      const currentDate = new Date(); // Get current date as string (MM/DD/YYYY)
-      //const currentDate = new Date().toISOString().split("T")[0];
+      const currentDate = new Date();
       const formattedTime = currentDate.toLocaleTimeString("en-US", {
         hour: "2-digit",
         minute: "2-digit",
         second: "2-digit",
       });
 
-      //calculate hours from start and end time..
       let emphoursWorked = 0;
       if (empstartTime && empendTime) {
-        const start = new Date(`1970-01-01T${empstartTime}:00`);
-        const end = new Date(`1970-01-01T${empendTime}:00`);
-
-        let hoursWorked = (end - start) / (1000 * 60 * 60); // Convert milliseconds to hours
-
-        if (hoursWorked < 0) {
-          hoursWorked += 24; // Handle overnight shifts
-        }
-
-        emphoursWorked = hoursWorked.toFixed(2); // Set the calculated hours in the input field
+        emphoursWorked = calculateHoursWorked(empstartTime, empendTime);
       } else {
         return alert("Please enter both Start Time and End Time.");
       }
@@ -172,10 +153,8 @@ document.addEventListener("DOMContentLoaded", function () {
       const UID = generateUID();
 
       try {
-        // Create a reference to the specific document in Firestore
         const employeeRef = ref(
           db,
-          // `employees/${userId}/${convertDate(getFormattedCurrentDate())}/${UID}`
           `employees/${convertDate(getFormattedCurrentDate())}/${userId}/${UID}`
         );
 
@@ -194,9 +173,9 @@ document.addEventListener("DOMContentLoaded", function () {
           addedby: username,
         });
 
-        // Clear form after submission
         employeeForm.reset();
         alert("Employee data submitted successfully!");
+        $("#empname, #emplocation").prop("disabled", false);
         getEmployeeFormData(convertDate(getFormattedCurrentDate()));
       } catch (e) {
         console.error("Error adding document: ", e.message);
@@ -218,8 +197,6 @@ async function getEmployeeFormData(date) {
   }
 
   const userId = user.uid;
-
-  // const employeeRef = ref(db, `employees/${userId}/${date}`);
   const employeeRef = ref(db, `employees/${date}/${userId}`);
 
   try {
@@ -227,16 +204,12 @@ async function getEmployeeFormData(date) {
 
     if (snapshot.exists()) {
       const employeeData = snapshot.val();
-
-      // Get the table element
       const tableElement = $("#employeeTable");
 
-      // Destroy existing DataTable instance if it exists
       if ($.fn.DataTable.isDataTable(tableElement)) {
         tableElement.DataTable().clear().destroy();
       }
 
-      //binding datatable....
       table = tableElement.DataTable({
         scrollX: true,
         responsive: true,
@@ -248,12 +221,9 @@ async function getEmployeeFormData(date) {
 
       table.clear();
 
-      // Loop through each UID entry in the data object
       for (const uid in employeeData) {
         if (employeeData.hasOwnProperty(uid)) {
           const employee = employeeData[uid];
-
-          // Format the date to 'Month Day, Year' format
           const localDate = new Date(date + "T00:00:00");
           const formattedDate = new Date(localDate).toLocaleDateString(
             "en-US",
@@ -264,7 +234,6 @@ async function getEmployeeFormData(date) {
             }
           );
 
-          // Add row with employee data, store UID as a data attribute
           const row = table.row
             .add([
               formattedDate,
@@ -282,7 +251,6 @@ async function getEmployeeFormData(date) {
             .draw()
             .node();
 
-          // Set UID as a data attribute for the row
           $(row).attr("data-uid", uid).attr("data-date", date);
         }
       }
@@ -294,28 +262,22 @@ async function getEmployeeFormData(date) {
   }
 }
 
-//Delete Employee Form Data
-// Event listener for delete button click
+// Event listener for delete button click start
 $("#employeeTable tbody").on("click", ".delete-btn", function () {
   const uid = $(this).data("uid");
   const date = $(this).data("date");
-
-  // Confirm deletion
   if (confirm("Are you sure you want to delete this record?")) {
-    // Remove the data from Firebase
-    const userId = localStorage.getItem("userId"); // Get userId from localStorage
-    //const currentDate = new Date().toLocaleDateString(); // Format the current date
+    const userId = localStorage.getItem("userId");
     const employeeRef = ref(db, `employees/${date}/${userId}/${uid}`);
 
     remove(employeeRef)
       .then(() => {
-        // If deletion is successful, remove the row from DataTable
         table
           .rows()
           .every(function () {
             const rowNode = this.node();
             if ($(rowNode).attr("data-uid") === uid) {
-              this.remove(); // Remove row from DataTable
+              this.remove();
             }
           })
           .draw();
@@ -327,9 +289,8 @@ $("#employeeTable tbody").on("click", ".delete-btn", function () {
       });
   }
 });
-//end delete function...
 
-//.....................End.....................//
+//Event listener for delete button click end
 
 function preventBackNavigation() {
   history.pushState(null, null, window.location.href);
@@ -369,6 +330,33 @@ function convertTo12HourFormat(time) {
   let [hours, minutes] = time.split(":");
   hours = parseInt(hours);
   let period = hours >= 12 ? "PM" : "AM";
-  hours = hours % 12 || 12; // Convert 0 to 12 for midnight
+  hours = hours % 12 || 12;
   return `${hours}:${minutes} ${period}`;
+}
+
+function calculateHoursWorked(startTime, endTime) {
+  let start = new Date(`1970-01-01T${startTime}`);
+  let end = new Date(`1970-01-01T${endTime}`);
+
+  // Handle night shift case where end time is on the next day
+  if (end < start) {
+    end.setDate(end.getDate() + 1);
+  }
+
+  let diffMs = end - start; // Difference in milliseconds
+  let diffMinutes = diffMs / (1000 * 60); // Convert to total minutes
+
+  let hours = Math.floor(diffMinutes / 60); // Get full hours
+  let minutes = diffMinutes % 60; // Get remaining minutes
+
+  if (hours === 0) {
+    return `${minutes} min`;
+  } else if (minutes === 0) {
+    return `${hours} hr`;
+  } else {
+    return `${hours} hr ${minutes} min`;
+  }
+}
+function formatKilometers(kilometers) {
+  return `${kilometers.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")} km`;
 }
