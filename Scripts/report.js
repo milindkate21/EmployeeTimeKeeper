@@ -79,16 +79,79 @@ async function populateTable(fromDate, toDate) {
     }
 
     // Initialize DataTable
+    // const table = tableElement.DataTable({
+    //   responsive: true,
+    //   scrollX: true,
+    //   order: [[0, "asc"]],
+    //   columnDefs: [
+    //     {
+    //       targets: 0,
+    //       type: "date",
+    //     },
+    //   ],
+    //   dom: 'l<"toolbar">Bfrtip',
+    //   buttons: [
+    //     {
+    //       extend: "excelHtml5",
+    //       text: "Download",
+    //       filename: function () {
+    //         return getFormattedFilename();
+    //       },
+    //       exportOptions: {
+    //         columns: ":visible",
+    //       },
+    //       action: function (e, dt, node, config) {
+    //         const rowCount = dt.rows().count();
+    //         if (rowCount === 0) {
+    //           alert("No data available for export.");
+    //         } else {
+    //           $.fn.dataTable.ext.buttons.excelHtml5.action.call(
+    //             this,
+    //             e,
+    //             dt,
+    //             node,
+    //             config
+    //           );
+    //         }
+    //       },
+    //     },
+    //   ],
+    // });
+
+    // $(window).on("resize", function () {
+    //   table.columns.adjust().responsive.recalc();
+    // });
     const table = tableElement.DataTable({
-      responsive: true,
-      scrollX: true,
-      order: [[0, "asc"]],
-      columnDefs: [
-        {
-          targets: 0,
-          type: "date",
+      responsive: {
+        details: {
+          type: "inline",
+          target: "td",
+          renderer: function (api, rowIdx, columns) {
+            var data = $.map(columns, function (col) {
+              return col.hidden
+                ? '<tr data-dt-row="' +
+                    col.rowIndex +
+                    '" data-dt-column="' +
+                    col.columnIndex +
+                    '">' +
+                    "<td>" +
+                    col.title +
+                    ":" +
+                    "</td> " +
+                    "<td>" +
+                    col.data +
+                    "</td>" +
+                    "</tr>"
+                : "";
+            }).join("");
+            return data ? $("<table/>").append(data) : false;
+          },
         },
-      ],
+      },
+      scrollX: false,
+      autoWidth: false,
+      order: [[0, "asc"]],
+      columnDefs: [{ targets: 0, type: "date" }],
       dom: 'l<"toolbar">Bfrtip',
       buttons: [
         {
@@ -98,7 +161,7 @@ async function populateTable(fromDate, toDate) {
             return getFormattedFilename();
           },
           exportOptions: {
-            columns: ":visible",
+            columns: ":visible, :hidden",
           },
           action: function (e, dt, node, config) {
             const rowCount = dt.rows().count();
@@ -118,6 +181,7 @@ async function populateTable(fromDate, toDate) {
       ],
     });
 
+    // Adjust column visibility and recalculate on resize
     $(window).on("resize", function () {
       table.columns.adjust().responsive.recalc();
     });
@@ -203,7 +267,7 @@ function formatDateToYYYYMMDD(date) {
 function formatDateToLongFormat(date) {
   const dateObj = new Date(date);
   const options = { year: "numeric", month: "long", day: "numeric" };
-  return dateObj.toLocaleDateString("en-US", options); // November 14, 2024
+  return dateObj.toLocaleDateString("en-US", options);
 }
 
 function formatDateToShortFormat(date) {

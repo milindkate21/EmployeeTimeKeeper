@@ -5,6 +5,17 @@ body {
   padding: 0;
 }
 
+.navbar-brand {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.companyName {
+  color: #edf4f2;
+  font-size: 18px;
+}
+
 .navbar-brand img {
   width: 60px;
   height: auto;
@@ -13,6 +24,7 @@ body {
 
 .navbar {
   padding: 0.5rem 1rem;
+  background-color: #31473a;
 }
 
 .navbar .navbar-nav .nav-link {
@@ -35,6 +47,16 @@ body {
   margin: 10px;
 }
 
+.navbar-toggler {
+  margin-top: 2px;
+  background-color: #edf4f2;
+}
+.navbar-toggler:focus {
+  outline: none !important;
+  box-shadow: none !important;
+  border: none !important;
+}
+
 /* Add space between the icons and the text */
 .navbar .navbar-nav .nav-link i {
   margin-right: 5px;
@@ -48,6 +70,6 @@ body {
   }
 
   .navbar-nav .nav-item {
-    margin-right: 0; /* Remove right margin for vertical items */
+    margin-right: 0;
   }
 }

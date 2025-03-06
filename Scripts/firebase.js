@@ -52,6 +52,13 @@ if (submitlogin) {
     const email = document.getElementById("username").value;
     const password = document.getElementById("password").value;
 
+    if (!email) {
+      return alert("Please enter a valid email address.");
+    }
+    if (!password) {
+      return alert("Please enter your password to continue.");
+    }
+
     event.preventDefault();
 
     const auth = getAuth();
@@ -91,6 +98,24 @@ if (submitlogin) {
           "error-message"
         ).innerText = `Error: ${errorMessage}`;
       });
+  });
+}
+
+const togglePassword = document.getElementById("toggle-password");
+if (togglePassword) {
+  togglePassword.addEventListener("click", function (event) {
+    var passwordField = document.getElementById("password");
+    var passwordIcon = document.getElementById("toggle-password");
+
+    if (passwordField.type === "password") {
+      passwordField.type = "text";
+      passwordIcon.classList.remove("bi-eye-fill");
+      passwordIcon.classList.add("bi-eye-slash-fill");
+    } else {
+      passwordField.type = "password";
+      passwordIcon.classList.remove("bi-eye-slash-fill");
+      passwordIcon.classList.add("bi-eye-fill");
+    }
   });
 }
 

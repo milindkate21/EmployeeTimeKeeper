@@ -2,7 +2,8 @@
   max-width: 600px;
   margin: 0 auto;
   padding: 20px;
-  background-color: #f9f9f9;
+  /* background-color: #f9f9f9; */
+  background-color: #edf4f2;
   border-radius: 8px;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
 }
@@ -61,8 +62,8 @@
 .formHeader {
   text-align: center;
   font-weight: bold;
-  background-color: #cadcfc;
-  color: #00246b;
+  background-color: #edf4f2;
+  color: #31473a;
   padding: 5px 5px;
   border-radius: 5px;
   width: fit-content;
@@ -90,24 +91,116 @@ table.dataTable {
   width: 20px;
 }
 
+/* work start */
+/* Default: Large Screens (Above 767px) */
 @media (min-width: 768px) {
-  #employeeForm #starttime,
-  #employeeForm #endtime {
-    width: 150px !important; /* Ensures the width is applied */
+  .date-container {
+    display: flex;
+    justify-content: center;
+    gap: 20px; /* Adds space between date fields */
+  }
+
+  .date-row {
+    display: flex;
+    align-items: center;
+  }
+  .date-row label {
+    margin-right: 10px;
+    margin-bottom: 5px;
+    display: inline-block;
+  }
+
+  .date-row .input-group {
+    margin-left: 5px;
+  }
+
+  .input-group {
+    width: 180px;
   }
 }
 
-/* Add custom styling to prevent horizontal overflow issues */
+/* Medium Screens: 401px - 767px (To Date should move to the next line) */
 @media (max-width: 767px) {
-  .dataTables_wrapper {
-    overflow-x: auto;
+  .toolbar {
+    display: flex;
+    gap: 10px; /* Adjust the gap between the buttons */
+    justify-content: flex-start;
+    margin-bottom: 10px;
+    z-index: 10; /* Ensure toolbar elements appear on top */
   }
-  .custom-toolbar {
-    margin: 10px;
+
+  /* Fix positioning of the page length dropdown */
+  .dataTables_length select {
+    position: relative; /* Ensure it stays in the correct location */
+    z-index: 20; /* Ensure dropdown appears on top */
+  }
+
+  .date-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 15px;
+    width: 100%;
+  }
+
+  .date-row {
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+    gap: 10px;
+    width: 100%;
+    margin-bottom: 10px;
+    max-width: 100%;
+  }
+
+  .date-row label {
+    width: 120px;
+    text-align: right;
+  }
+
+  .date-row input {
+    flex: 1;
+    width: 180px;
+    min-width: 180px;
+  }
+
+  .date-container .date-row:nth-child(1) {
+    width: 100%;
+  }
+
+  .date-container .date-row:nth-child(2) {
+    width: 100%;
   }
 }
+
+/* Small Screens (Below 400px) - Full Stack */
+@media (max-width: 400px) {
+  .date-container {
+    display: block;
+  }
+
+  .date-row {
+    display: block;
+    margin-bottom: 10px;
+    width: 100%;
+  }
+
+  .date-row label {
+    width: auto;
+    text-align: left;
+    margin-bottom: 5px;
+  }
+
+  .date-row input {
+    width: 100%;
+    min-width: 180px;
+  }
+}
+
+/* work end */
+
 .dataTables_filter {
-  margin-bottom: 20px; /* Adjust this value as needed */
+  margin-bottom: 20px;
 }
 
 /* style for report datatable*/

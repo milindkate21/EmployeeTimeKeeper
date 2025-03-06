@@ -104,6 +104,10 @@ body {
   color: #039be5;
 }
 
+#toggle-password {
+  margin-right: 5px;
+}
+
 /* Media Queries for smaller screens */
 @media (max-width: 480px) {
   .wrapper {
