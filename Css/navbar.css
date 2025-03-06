@@ -17,14 +17,15 @@ body {
 }
 
 .navbar-brand img {
-  width: 60px;
+  width: 120px;
   height: auto;
   margin-right: 10px;
 }
 
 .navbar {
   padding: 0.5rem 1rem;
-  background-color: #31473a;
+  /* background-color: #31473a; */
+  background-color: #00945f;
 }
 
 .navbar .navbar-nav .nav-link {

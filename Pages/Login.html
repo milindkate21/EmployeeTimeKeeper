@@ -24,6 +24,13 @@
       rel="stylesheet"
       href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css"
     />
+    <!--Google Fonts-->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap"
+      rel="stylesheet"
+    />
     <link rel="stylesheet" href="/Css/login.css" />
     <script
       src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
@@ -36,14 +43,15 @@
     <div class="wrapper">
       <div class="logo">
         <img
-          src="/Images/LoginImage.png"
+          src="/Images/logo1.png"
           alt="This is the image of user icon in login form."
         />
       </div>
-      <div style="width: 100%">
+      <div>
+        <h1 id="headerText">Hi, there!</h1>
         <form class="p-3 mt-3">
           <div class="form-field d-flex align-items-center">
-            <span class="far fa-user"></span>
+            <span class="fa-solid fa-user"></span>
             <input
               type="text"
               name="username"
@@ -53,17 +61,20 @@
             />
           </div>
           <div class="form-field d-flex align-items-center">
-            <span class="fas fa-key"></span>
+            <span class="fa-solid fa-key"></span>
             <input
               type="password"
               name="password"
               id="password"
               placeholder="Password"
               required
+              autocomplete="off"
             />
-            <i class="bi bi-eye-fill" id="toggle-password"></i>
+            <i class="fa-solid fa-eye" id="toggle-password"></i>
           </div>
-          <button id="submitlogin" class="btn mt-3">Login</button>
+          <button id="submitlogin" type="submit" class="btn btn-primary">
+            Login
+          </button>
         </form>
       </div>
     </div>

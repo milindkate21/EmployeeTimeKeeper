@@ -1,8 +1,11 @@
+body {
+  font-family: "Inter", sans-serif;
+}
+
 #employeeForm {
   max-width: 600px;
   margin: 0 auto;
   padding: 20px;
-  /* background-color: #f9f9f9; */
   background-color: #edf4f2;
   border-radius: 8px;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
@@ -62,7 +65,7 @@
 .formHeader {
   text-align: center;
   font-weight: bold;
-  background-color: #edf4f2;
+  /* background-color: #edf4f2; */
   color: #31473a;
   padding: 5px 5px;
   border-radius: 5px;
@@ -80,6 +83,18 @@
   width: 100%;
   max-width: 100%;
   white-space: nowrap;
+  background-color: #edf4f2 !important;
+}
+
+#employeeTable tbody td {
+  background-color: #edf4f2 !important;
+}
+#employeeTable tbody tr:nth-child(odd) {
+  background-color: #edf4f2 !important;
+}
+
+#employeeTable tbody tr:nth-child(even) {
+  background-color: #ffffff !important;
 }
 
 /* Ensure the table is fully responsive */
@@ -91,13 +106,15 @@ table.dataTable {
   width: 20px;
 }
 
+/* this is the button for the download excel button */
+
 /* work start */
 /* Default: Large Screens (Above 767px) */
 @media (min-width: 768px) {
   .date-container {
     display: flex;
     justify-content: center;
-    gap: 20px; /* Adds space between date fields */
+    gap: 20px;
   }
 
   .date-row {
@@ -123,16 +140,16 @@ table.dataTable {
 @media (max-width: 767px) {
   .toolbar {
     display: flex;
-    gap: 10px; /* Adjust the gap between the buttons */
+    gap: 10px;
     justify-content: flex-start;
     margin-bottom: 10px;
-    z-index: 10; /* Ensure toolbar elements appear on top */
+    z-index: 10;
   }
 
   /* Fix positioning of the page length dropdown */
   .dataTables_length select {
-    position: relative; /* Ensure it stays in the correct location */
-    z-index: 20; /* Ensure dropdown appears on top */
+    position: relative;
+    z-index: 20;
   }
 
   .date-container {
@@ -171,6 +188,48 @@ table.dataTable {
   .date-container .date-row:nth-child(2) {
     width: 100%;
   }
+
+  /* using for page entry start */
+  .dataTables_length {
+    margin-top: 10px;
+    text-align: left;
+  }
+
+  .dataTables_filter {
+    margin-top: 10px;
+    text-align: left;
+  }
+
+  .dataTables_paginate {
+    text-align: left;
+  }
+
+  /* Adjust the width of the table for smaller screens */
+  .dataTables_wrapper {
+    overflow-x: auto;
+  }
+
+  .dataTables_length select {
+    width: auto;
+  }
+
+  .dataTables_wrapper {
+    width: 100%;
+    overflow-x: auto;
+  }
+
+  .dataTables_length {
+    display: block;
+    text-align: left;
+    margin-bottom: 10px;
+  }
+
+  .dataTables_paginate {
+    display: block;
+    text-align: left;
+  }
+
+  /* using for page entry end */
 }
 
 /* Small Screens (Below 400px) - Full Stack */
@@ -209,7 +268,16 @@ table.dataTable {
   float: right;
   margin: 0px 10px;
 }
-
+.dataTables_wrapper .dt-buttons .buttons-excel {
+  background-color: #007bff;
+  color: white;
+  border: none;
+}
+.dataTables_wrapper .dt-buttons .buttons-excel:hover {
+  background-color: #0056b3; /* Darker shade of blue for hover */
+  color: white; /* Keep text color white on hover */
+  cursor: pointer; /* Change cursor to pointer on hover */
+}
 #reportLabel {
   padding: 10px;
   margin-top: 10px;

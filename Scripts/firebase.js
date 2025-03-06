@@ -53,7 +53,7 @@ if (submitlogin) {
     const password = document.getElementById("password").value;
 
     if (!email) {
-      return alert("Please enter a valid email address.");
+      return alert("Please enter a valid username.");
     }
     if (!password) {
       return alert("Please enter your password to continue.");
@@ -79,7 +79,7 @@ if (submitlogin) {
               localStorage.setItem("username", userData.username);
 
               if (userData.role === "admin") {
-                window.location.href = "/Pages/Home.html";
+                window.location.href = "/Pages/EmployeeHome.html";
               } else {
                 window.location.href = "/Pages/EmployeeHome.html";
               }
@@ -94,6 +94,9 @@ if (submitlogin) {
       .catch((error) => {
         const errorCode = error.code;
         const errorMessage = error.message;
+
+        alert("Login failed! Please check your username and password.");
+
         document.getElementById(
           "error-message"
         ).innerText = `Error: ${errorMessage}`;
@@ -109,12 +112,12 @@ if (togglePassword) {
 
     if (passwordField.type === "password") {
       passwordField.type = "text";
-      passwordIcon.classList.remove("bi-eye-fill");
-      passwordIcon.classList.add("bi-eye-slash-fill");
+      passwordIcon.classList.remove("fa-eye");
+      passwordIcon.classList.add("fa-eye-slash");
     } else {
       passwordField.type = "password";
-      passwordIcon.classList.remove("bi-eye-slash-fill");
-      passwordIcon.classList.add("bi-eye-fill");
+      passwordIcon.classList.remove("fa-eye-slash");
+      passwordIcon.classList.add("fa-eye");
     }
   });
 }

@@ -6,12 +6,11 @@
   margin: 0;
   padding: 0;
   box-sizing: border-box;
-  font-family: sans-serif;
+  font-family: "Inter", sans-serif;
 }
 
 body {
   background: #ecf0f3;
-  font-family: "Poppins", sans-serif;
   height: 100vh; /* Full screen height */
   display: flex;
   justify-content: center;
@@ -25,27 +24,33 @@ body {
   padding: 40px 30px 30px 30px;
   background-color: #ecf0f3;
   border-radius: 15px;
-  box-shadow: 13px 13px 20px #cbced1, -13px -13px 20px #fff;
-  /* Center the form vertically and horizontally */
   width: 100%;
   display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: center;
 }
-
 .logo {
-  width: 80px;
-  margin: auto;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 5px;
+  text-align: center;
+  padding: 10px;
 }
 
 .logo img {
-  width: 100%;
-  height: 80px;
-  object-fit: cover;
-  border-radius: 50%;
-  box-shadow: 0px 0px 3px #5f5f5f, 0px 0px 0px 5px #ecf0f3, 8px 8px 15px #a7aaa7,
-    -8px -8px 15px #fff;
+  max-width: 100px;
+  height: auto;
+  width: 80%;
+  max-width: 120px;
+}
+
+#headerText {
+  font-size: 1.8rem;
+  text-align: center;
+  margin-top: 20px;
 }
 
 .wrapper .name {
@@ -65,14 +70,12 @@ body {
   font-size: 1.2rem;
   color: #666;
   padding: 10px 15px 10px 10px;
-  /* border: 1px solid red; */
 }
 
 .wrapper .form-field {
   padding-left: 10px;
   margin-bottom: 20px;
-  border-radius: 20px;
-  box-shadow: inset 8px 8px 8px #cbced1, inset -8px -8px 8px #fff;
+  border: 1px solid grey;
 }
 
 .wrapper .form-field .fas {
@@ -83,15 +86,13 @@ body {
   box-shadow: none;
   width: 100%;
   height: 40px;
-  background-color: #03a9f4;
+  background-color: #007bff;
   color: #fff;
-  border-radius: 25px;
-  box-shadow: 3px 3px 3px #b1b1b1, -3px -3px 3px #fff;
   letter-spacing: 1.3px;
-}
-
-.wrapper .btn:hover {
-  background-color: #039be5;
+  font-size: 18px;
+  font-weight: bold;
+  border-radius: 4px;
+  box-sizing: border-box;
 }
 
 .wrapper a {
@@ -105,18 +106,43 @@ body {
 }
 
 #toggle-password {
-  margin-right: 5px;
+  margin-right: 10px;
+  cursor: pointer;
+}
+
+/*Remove the dafault background color change in username*/
+/* Forces autofill background to match the normal input field */
+input:-webkit-autofill {
+  background-color: transparent !important;
+  box-shadow: 0 0 0px 1000px #ecf0f3 inset !important; /* Match your input's background */
+  -webkit-box-shadow: 0 0 0px 1000px #ecf0f3 inset !important;
+  color: #666 !important; /* Ensures text color consistency */
+}
+
+/* Prevent autofill styles on focus */
+input:-webkit-autofill:focus {
+  background-color: #ecf0f3 !important; /* Match your input background */
+  box-shadow: 0 0 0px 1000px #ecf0f3 inset !important;
+  -webkit-box-shadow: 0 0 0px 1000px #ecf0f3 inset !important;
+  color: #666 !important;
 }
 
 /* Media Queries for smaller screens */
 @media (max-width: 480px) {
+  .logo img {
+    /* height: 70px; */
+    max-width: 80px;
+  }
+
+  #headerText {
+    font-size: 1.8rem; /* Adjust text size */
+    text-align: center;
+    margin-top: 20px;
+  }
+
   .wrapper {
     margin: 20px;
     padding: 30px 20px;
-  }
-
-  .logo img {
-    height: 70px;
   }
 
   .wrapper .name {
@@ -152,5 +178,15 @@ body {
   .wrapper .btn {
     height: 45px;
     font-size: 1rem;
+  }
+  .logo img {
+    /* height: 70px; */
+    max-width: 80px;
+  }
+
+  #headerText {
+    font-size: 1.8rem; /* Adjust text size */
+    text-align: center;
+    margin-top: 20px;
   }
 }

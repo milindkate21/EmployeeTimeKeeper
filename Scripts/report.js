@@ -79,48 +79,6 @@ async function populateTable(fromDate, toDate) {
     }
 
     // Initialize DataTable
-    // const table = tableElement.DataTable({
-    //   responsive: true,
-    //   scrollX: true,
-    //   order: [[0, "asc"]],
-    //   columnDefs: [
-    //     {
-    //       targets: 0,
-    //       type: "date",
-    //     },
-    //   ],
-    //   dom: 'l<"toolbar">Bfrtip',
-    //   buttons: [
-    //     {
-    //       extend: "excelHtml5",
-    //       text: "Download",
-    //       filename: function () {
-    //         return getFormattedFilename();
-    //       },
-    //       exportOptions: {
-    //         columns: ":visible",
-    //       },
-    //       action: function (e, dt, node, config) {
-    //         const rowCount = dt.rows().count();
-    //         if (rowCount === 0) {
-    //           alert("No data available for export.");
-    //         } else {
-    //           $.fn.dataTable.ext.buttons.excelHtml5.action.call(
-    //             this,
-    //             e,
-    //             dt,
-    //             node,
-    //             config
-    //           );
-    //         }
-    //       },
-    //     },
-    //   ],
-    // });
-
-    // $(window).on("resize", function () {
-    //   table.columns.adjust().responsive.recalc();
-    // });
     const table = tableElement.DataTable({
       responsive: {
         details: {
@@ -199,11 +157,6 @@ async function populateTable(fromDate, toDate) {
         const snapshot = await get(employeeRef);
         if (snapshot.exists()) {
           const employeeData = snapshot.val();
-          console.log(`Employee Data for ${formattedDate}:`, employeeData);
-
-          console.log(
-            `Employee Data for ${formatDateToShortFormat(formattedDate)}:`
-          );
 
           // Loop through each UID entry in the data object
           for (const uid in employeeData) {
