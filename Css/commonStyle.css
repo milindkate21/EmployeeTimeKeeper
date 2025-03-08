@@ -105,10 +105,12 @@ table.dataTable {
 #kmnumber {
   width: 20px;
 }
+#kilocheckbox {
+  border: 1px solid #5b866d;
+  width: 24px;
+  height: 24px;
+}
 
-/* this is the button for the download excel button */
-
-/* work start */
 /* Default: Large Screens (Above 767px) */
 @media (min-width: 768px) {
   .date-container {
@@ -228,8 +230,6 @@ table.dataTable {
     display: block;
     text-align: left;
   }
-
-  /* using for page entry end */
 }
 
 /* Small Screens (Below 400px) - Full Stack */
@@ -255,8 +255,6 @@ table.dataTable {
     min-width: 180px;
   }
 }
-
-/* work end */
 
 .dataTables_filter {
   margin-bottom: 20px;
