@@ -79,7 +79,7 @@ if (submitlogin) {
               localStorage.setItem("username", userData.username);
 
               if (userData.role === "admin") {
-                window.location.href = "/Pages/EmployeeHome.html";
+                window.location.href = "/Pages/Home.html";
               } else {
                 window.location.href = "/Pages/EmployeeHome.html";
               }
