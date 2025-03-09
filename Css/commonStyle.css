@@ -192,10 +192,6 @@ table.dataTable {
   }
 
   /* using for page entry start */
-  .dataTables_length {
-    margin-top: 10px;
-    text-align: left;
-  }
 
   .dataTables_filter {
     margin-top: 10px;
@@ -215,12 +211,14 @@ table.dataTable {
     width: auto;
   }
 
-  .dataTables_wrapper {
+  /* .dataTables_wrapper {
     width: 100%;
     overflow-x: auto;
-  }
+  } */
 
   .dataTables_length {
+    margin-top: 10px;
+    text-align: left;
     display: block;
     text-align: left;
     margin-bottom: 10px;

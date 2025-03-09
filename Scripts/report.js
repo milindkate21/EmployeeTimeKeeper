@@ -80,6 +80,7 @@ async function populateTable(fromDate, toDate) {
 
     // Initialize DataTable
     const table = tableElement.DataTable({
+      scrollX: false,
       responsive: {
         details: {
           type: "inline",
@@ -106,10 +107,13 @@ async function populateTable(fromDate, toDate) {
           },
         },
       },
-      scrollX: false,
       autoWidth: false,
       order: [[0, "asc"]],
-      columnDefs: [{ targets: 0, type: "date" }],
+      columnDefs: [
+        { targets: 0, type: "date", responsivePriority: 1 },
+        { targets: 1, responsivePriority: 1 },
+        { targets: "_all", responsivePriority: 2 },
+      ],
       dom: 'l<"toolbar">Bfrtip',
       buttons: [
         {
@@ -140,9 +144,9 @@ async function populateTable(fromDate, toDate) {
     });
 
     // Adjust column visibility and recalculate on resize
-    $(window).on("resize", function () {
-      table.columns.adjust().responsive.recalc();
-    });
+    // $(window).on("resize", function () {
+    //   table.columns.adjust().responsive.recalc();
+    // });
 
     table.clear();
 
