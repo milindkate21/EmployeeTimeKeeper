@@ -42,6 +42,8 @@
     <script src="https://cdn.datatables.net/1.11.5/js/jquery.dataTables.min.js"></script>
     <script type="module" src="/Scripts/firebase.js" defer></script>
     <script type="module" src="/Scripts/common.js"></script>
+    <script type="module" src="/Scripts/charts.js"></script>
+    <script src="https://code.highcharts.com/highcharts.js"></script>
   </head>
   <body>
     <!-- navbar-dark bg-dark -->
@@ -90,11 +92,11 @@
             </li>
           </ul>
         </div>
-
-        <div>
-          <h1>Page under maintainance</h1>
-        </div>
       </div>
     </nav>
+    <div
+      id="chartsBody"
+      style="width: 550px; height: 400px; margin: 0 auto"
+    ></div>
   </body>
 </html>
