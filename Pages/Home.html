@@ -44,6 +44,27 @@
     <script type="module" src="/Scripts/common.js"></script>
     <script type="module" src="/Scripts/charts.js"></script>
     <script src="https://code.highcharts.com/highcharts.js"></script>
+    <script src="https://code.highcharts.com/modules/heatmap.js"></script>
+    <script src="https://code.highcharts.com/modules/bubble.js"></script>
+    <script src="https://code.highcharts.com/modules/exporting.js"></script>
+    <script src="https://code.highcharts.com/modules/offline-exporting.js"></script>
+
+    <style>
+      #dashboard {
+        display: flex;
+        flex-direction: column;
+        gap: 20px;
+        padding: 20px;
+      }
+
+      .metrics {
+        display: flex;
+        justify-content: space-between;
+        background-color: #f0f0f0;
+        padding: 10px;
+        border-radius: 8px;
+      }
+    </style>
   </head>
   <body>
     <!-- navbar-dark bg-dark -->
@@ -70,11 +91,11 @@
         </button>
         <div class="collapse navbar-collapse" id="navbarNav">
           <ul class="navbar-nav ms-auto">
-            <!-- <li class="nav-item">
+            <li class="nav-item">
               <a class="nav-link" href="/Pages/Home.html">
                 <i class="fas fa-home"></i>Home</a
               >
-            </li> -->
+            </li>
             <li class="nav-item">
               <a class="nav-link" href="/Pages/EmployeeHome.html">
                 <i class="fas fa-user"></i>Employee Form</a
@@ -94,9 +115,51 @@
         </div>
       </div>
     </nav>
-    <div
-      id="chartsBody"
-      style="width: 550px; height: 400px; margin: 0 auto"
+    <!-- <div
+      id="tasksPerIndustry"
+      style="width: 80%; height: 400px; margin: 20px auto"
     ></div>
+    <div
+      id="workDistribution"
+      style="width: 80%; height: 400px; margin: 20px auto"
+    ></div>
+    <div
+      id="hoursPerClient"
+      style="width: 80%; height: 400px; margin: 20px auto"
+    ></div>
+    <div
+      id="workHoursDistribution"
+      style="width: 80%; height: 400px; margin: 20px auto"
+    ></div>
+    <div
+      id="clientWorkload"
+      style="width: 80%; height: 400px; margin: 20px auto"
+    ></div>
+
+    <div
+      id="workHoursTrend"
+      style="width: 80%; height: 400px; margin: 20px auto"
+    ></div>
+    <div
+      id="stackedIndustry"
+      style="width: 80%; height: 400px; margin: 20px auto"
+    ></div> -->
+    <div id="dashboard">
+      <!-- Key Metrics -->
+      <div class="metrics">
+        <div>Total Work Hours: <span id="totalWorkHours">0</span></div>
+        <div>Number of Clients: <span id="totalClients">0</span></div>
+        <div>Tasks Completed: <span id="totalTasks">0</span></div>
+        <div>Locations Covered: <span id="totalLocations">0</span></div>
+      </div>
+
+      <!-- Graph Containers -->
+      <div id="pieChart" style="width: 100%; height: 400px"></div>
+      <div id="lineChart" style="width: 100%; height: 400px"></div>
+      <div id="barChart" style="width: 100%; height: 400px"></div>
+
+      <div id="leaderboardChart" style="width: 100%; height: 400px"></div>
+      <div id="stackedBarChart" style="width: 100%; height: 400px"></div>
+    </div>
   </body>
 </html>
