@@ -88,16 +88,16 @@ function updateCharts(data) {
   });
 
   // Update Pie Chart
-  // Highcharts.chart("workHoursDistribution", {
-  //   chart: { type: "pie" },
-  //   title: { text: "Work Hours Distribution Per Industry" },
-  //   series: [
-  //     {
-  //       name: "Hours",
-  //       data: Object.entries(industryHours).map(([name, y]) => ({ name, y })),
-  //     },
-  //   ],
-  // });
+  Highcharts.chart("workHoursDistribution", {
+    chart: { type: "pie" },
+    title: { text: "Work Hours Distribution Per Industry" },
+    series: [
+      {
+        name: "Hours",
+        data: Object.entries(industryHours).map(([name, y]) => ({ name, y })),
+      },
+    ],
+  });
 }
 
 // Fetch Data on Page Load
