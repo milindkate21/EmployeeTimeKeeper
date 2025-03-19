@@ -80,7 +80,8 @@ async function populateTable(fromDate, toDate) {
 
     // Initialize DataTable
     const table = tableElement.DataTable({
-      scrollX: false,
+      //scrollX: false,
+
       responsive: {
         details: {
           type: "inline",
@@ -107,6 +108,7 @@ async function populateTable(fromDate, toDate) {
           },
         },
       },
+      pageLength: 25,
       autoWidth: false,
       order: [[0, "asc"]],
       columnDefs: [
@@ -141,6 +143,13 @@ async function populateTable(fromDate, toDate) {
           },
         },
       ],
+
+      //Temparary only fix the show,search and download button no scroll...
+      scrollX: true,
+      scrollY: true,
+      // sScrollX: "100%",
+      // sScrollXInner: "110%",
+      fixedHeader: true,
     });
 
     // Adjust column visibility and recalculate on resize

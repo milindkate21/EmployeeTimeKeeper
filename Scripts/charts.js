@@ -21,7 +21,6 @@ onAuthStateChanged(auth, (user) => {
 
 async function fetchData() {
   try {
-    debugger;
     const snapshot = await get(ref(db, "employees")); // Fetch all employees data
 
     if (!snapshot.exists()) {
@@ -57,44 +56,155 @@ function updateMetrics(data) {
   const totalTasks = data.length;
   const totalClients = new Set(data.map((d) => d.name)).size;
   const totalLocations = new Set(data.map((d) => d.location)).size;
-  const totalWorkHours = data.reduce((sum, d) => sum + (d.workHours || 0), 0);
+  const totalWorkMinutes = data.reduce(
+    (sum, d) => sum + parseHoursWorked(d.hoursWorked),
+    0
+  );
+
+  const totalWorkHours = Math.floor(totalWorkMinutes / 60); // Full hours
+  const remainingMinutes = totalWorkMinutes % 60; // Remaining minutes
 
   document.getElementById("totalTasks").textContent = totalTasks;
   document.getElementById("totalClients").textContent = totalClients;
   document.getElementById("totalLocations").textContent = totalLocations;
-  document.getElementById("totalWorkHours").textContent =
-    totalWorkHours.toFixed(2);
+  document.getElementById(
+    "totalWorkHours"
+  ).textContent = `${totalWorkHours} hr ${remainingMinutes} min`;
 }
 
 // Update Charts
 function updateCharts(data) {
-  const clientHours = {};
-  const industryHours = {};
+  // Helper function to aggregate hours worked by a key (e.g., client or location)
+  const aggregateData = (array, key) => {
+    return array.reduce((acc, item) => {
+      const groupKey = item[key];
+      const exactHoursWorked = item.hoursWorked || "0 hr"; // Default to "0 hr"
 
-  data.forEach(({ client, workHours, industry }) => {
-    clientHours[client] = (clientHours[client] || 0) + workHours;
-    industryHours[industry] = (industryHours[industry] || 0) + workHours;
-  });
+      // Parse hoursWorked to total minutes
+      const minutes = parseHoursWorked(exactHoursWorked);
 
-  // Update Bar Chart
+      if (groupKey) {
+        acc[groupKey] = acc[groupKey] || { totalMinutes: 0 };
+        acc[groupKey].totalMinutes += minutes; // Sum total minutes
+      }
+      return acc;
+    }, {});
+  };
+
+  const aggregateTaskCounts = (array, key) => {
+    return array.reduce((acc, item) => {
+      const groupKey = item[key];
+
+      if (groupKey) {
+        acc[groupKey] = (acc[groupKey] || 0) + 1;
+      }
+      return acc;
+    }, {});
+  };
+
+  // Format total minutes to "X hr Y min"
+  const formatMinutesToHours = (minutes) => {
+    const hours = Math.floor(minutes / 60);
+    const remainingMinutes = minutes % 60;
+    return `${hours} hr${
+      remainingMinutes > 0 ? ` ${remainingMinutes} min` : ""
+    }`;
+  };
+
+  // Parse hoursWorked (convert "X hr Y min" to total minutes)
+  const parseHoursWorked = (hoursWorked) => {
+    if (!hoursWorked) return 0;
+
+    const [_, hours = 0, minutes = 0] =
+      hoursWorked.match(/(\d+)\s*hr(?:.*?(\d+)?\s*min?)?/) || [];
+    return parseInt(hours) * 60 + parseInt(minutes || 0);
+  };
+
+  // Aggregate data for bar chart (clients)
+  const clientData = aggregateData(data, "name");
+
+  // Prepare data for the bar chart
+  const barCategories = Object.keys(clientData);
+  const barSeriesData = Object.entries(clientData).map(
+    ([name, { totalMinutes }]) => ({
+      y: totalMinutes / 60,
+      name,
+      formattedHours: formatMinutesToHours(totalMinutes),
+    })
+  );
+
+  // Update Bar Chart (Client Hours)
   Highcharts.chart("hoursPerClient", {
     chart: { type: "column" },
     title: { text: "Total Hours Worked Per Client" },
-    xAxis: { categories: Object.keys(clientHours), crosshair: true },
-    yAxis: { min: 0, title: { text: "Hours Worked" } },
+    xAxis: {
+      categories: barCategories,
+      crosshair: true,
+      title: {
+        text: "Client",
+        style: {
+          fontWeight: "bold",
+        },
+      },
+    },
+    yAxis: {
+      min: 0,
+      title: {
+        text: "Hours Worked",
+        style: {
+          fontWeight: "bold",
+        },
+      },
+    },
+    tooltip: {
+      formatter: function () {
+        return `<b>${this.point.name}</b><br>Hours Worked - <b>${this.point.formattedHours}</b>`;
+      },
+    },
     series: [
-      { name: "Hours", data: Object.values(clientHours), color: "#FF5733" },
+      {
+        name: "Hours Worked",
+        data: barSeriesData,
+        color: "#FF5733",
+      },
     ],
   });
 
-  // Update Pie Chart
+  // Aggregate task counts for pie chart
+  const locationTaskCounts = aggregateTaskCounts(data, "location");
+
+  // Prepare data for pie chart
+  const pieSeriesData = Object.entries(locationTaskCounts).map(
+    ([name, count]) => ({
+      name,
+      y: count,
+    })
+  );
+
+  // Update Pie Chart (Number of Tasks Per Location)
   Highcharts.chart("workHoursDistribution", {
     chart: { type: "pie" },
-    title: { text: "Work Hours Distribution Per Industry" },
+    title: { text: "Number of Tasks Per Location" },
+    tooltip: {
+      formatter: function () {
+        return `<b>${this.point.name}</b><br>Tasks - <b>${this.point.y}</b>`;
+      },
+    },
+    plotOptions: {
+      pie: {
+        allowPointSelect: true,
+        cursor: "pointer",
+        dataLabels: {
+          enabled: true,
+          format: "<b>{point.name}</b>",
+        },
+      },
+    },
     series: [
       {
-        name: "Hours",
-        data: Object.entries(industryHours).map(([name, y]) => ({ name, y })),
+        name: "Tasks",
+        colorByPoint: true,
+        data: pieSeriesData,
       },
     ],
   });
@@ -103,95 +213,17 @@ function updateCharts(data) {
 // Fetch Data on Page Load
 fetchData();
 
-// Highcharts.chart("hoursPerClient", {
-//   chart: { type: "column" },
-//   title: { text: "Total Hours Worked Per Client" },
-//   xAxis: {
-//     categories: [
-//       "Loblaw Ltd.",
-//       "RBC Bank",
-//       "Tesla",
-//       "Bell Canada",
-//       "St. Michael's Hospital",
-//       "Shopify",
-//       "Cineplex",
-//       "Fairmont Hotel",
-//       "Tim Hortons",
-//       "CN Rail",
-//     ],
-//     crosshair: true,
-//   },
-//   yAxis: { min: 0, title: { text: "Hours Worked" } },
-//   series: [
-//     {
-//       name: "Hours",
-//       data: [1, 1.75, 2, 2.5, 2.5, 2, 1.5, 1.75, 2, 1.5], // Adjust based on your data
-//       color: "#FF5733",
-//     },
-//   ],
-// });
+function parseHoursWorked(hoursWorked) {
+  if (!hoursWorked) return 0;
 
-// // 2. Work Hours Distribution Per Industry - Pie Chart
-// Highcharts.chart("workHoursDistribution", {
-//   chart: { type: "pie" },
-//   title: { text: "Work Hours Distribution Per Industry" },
-//   series: [
-//     {
-//       name: "Hours",
-//       data: [
-//         { name: "Retail", y: 2 },
-//         { name: "Banking & Finance", y: 1.75 },
-//         { name: "Automotive", y: 2 },
-//         { name: "Telecom", y: 2.5 },
-//         { name: "Healthcare", y: 2.5 },
-//         { name: "Technology", y: 2 },
-//         { name: "Entertainment", y: 1.5 },
-//         { name: "Hospitality", y: 1.75 },
-//         { name: "Food & Beverage", y: 2 },
-//         { name: "Transportation", y: 1.5 },
-//       ],
-//     },
-//   ],
-// });
+  const [_, hours = 0, minutes = 0] =
+    hoursWorked.match(/(\d+)\s*hr(?:.*?(\d+)?\s*min?)?/) || [];
 
-// /////-------------------------------------------------------------------------
-// // Sample Data
-// const data = [
-//   {
-//     date: "Mar 3, 2025",
-//     client: "Loblaw Ltd.",
-//     location: "London",
-//     work: "Remove snow from front lobby",
-//     startTime: "09:00 AM",
-//     endTime: "10:00 AM",
-//     notes: "Temp around 6 degree",
-//   },
-//   // Add more entries
-// ];
+  return parseInt(hours) * 60 + parseInt(minutes || 0);
+}
 
-// // Calculate Metrics
-// const totalTasks = data.length;
-// const totalClients = new Set(data.map((d) => d.client)).size;
-// const totalLocations = new Set(data.map((d) => d.location)).size;
-// const totalWorkHours = data.reduce((sum, d) => {
-//   const startTime = new Date(`1970-01-01T${convertTo24Hour(d.startTime)}`);
-//   const endTime = new Date(`1970-01-01T${convertTo24Hour(d.endTime)}`);
-//   return sum + (endTime - startTime) / (1000 * 60 * 60); // Convert milliseconds to hours
-// }, 0);
-
-// // Update Metrics in HTML
-// document.getElementById("totalTasks").textContent = totalTasks;
-// document.getElementById("totalClients").textContent = totalClients;
-// document.getElementById("totalLocations").textContent = totalLocations;
-// document.getElementById("totalWorkHours").textContent =
-//   totalWorkHours.toFixed(2);
-
-// // Convert 12-hour time to 24-hour time
-// function convertTo24Hour(timeStr) {
-//   const [time, modifier] = timeStr.split(" ");
-//   let [hours, minutes] = time.split(":");
-//   if (modifier === "PM" && hours !== "12") {
-//     hours = parseInt(hours, 10) + 12;
-//   }
-//   return `${hours}:${minutes}`;
-// }
+function formatMinutesToHours(minutes) {
+  const hours = Math.floor(minutes / 60);
+  const remainingMinutes = minutes % 60;
+  return `${hours} hr${remainingMinutes > 0 ? ` ${remainingMinutes} min` : ""}`;
+}

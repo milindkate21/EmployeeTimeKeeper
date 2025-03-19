@@ -36,6 +36,7 @@
     />
 
     <link rel="stylesheet" href="/Css/navbar.css" />
+    <link rel="stylesheet" href="/Css/commonStyle.css" />
 
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
@@ -48,23 +49,6 @@
     <script src="https://code.highcharts.com/modules/bubble.js"></script>
     <script src="https://code.highcharts.com/modules/exporting.js"></script>
     <script src="https://code.highcharts.com/modules/offline-exporting.js"></script>
-
-    <style>
-      #dashboard {
-        display: flex;
-        flex-direction: column;
-        gap: 20px;
-        padding: 20px;
-      }
-
-      .metrics {
-        display: flex;
-        justify-content: space-between;
-        background-color: #f0f0f0;
-        padding: 10px;
-        border-radius: 8px;
-      }
-    </style>
   </head>
   <body>
     <!-- navbar-dark bg-dark -->
@@ -76,7 +60,7 @@
             alt="Company Logo"
             class="d-inline-block align-text-top"
           />
-          <!-- <span class="companyName">Dragonfly Services</span> -->
+          <!-- <span class="companyName"></span> -->
         </a>
         <button
           class="navbar-toggler"
@@ -117,21 +101,32 @@
     </nav>
 
     <div id="dashboard">
-      <!-- Key Metrics -->
       <div class="metrics">
-        <div>Total Work Hours: <span id="totalWorkHours">0</span></div>
-        <div>Number of Clients: <span id="totalClients">0</span></div>
-        <div>Tasks Completed: <span id="totalTasks">0</span></div>
-        <div>Locations Covered: <span id="totalLocations">0</span></div>
+        <div class="metric-box">
+          <h3>Total Clients</h3>
+          <p><span id="totalClients">0</span></p>
+        </div>
+        <div class="metric-box">
+          <h3>Completed Tasks</h3>
+          <p><span id="totalTasks">0</span></p>
+        </div>
+        <div class="metric-box">
+          <h3>Locations Covered</h3>
+          <p><span id="totalLocations">0</span></p>
+        </div>
+        <div class="metric-box">
+          <h3>Hours Contributed</h3>
+          <p><span id="totalWorkHours">0</span></p>
+        </div>
       </div>
     </div>
     <div
       id="hoursPerClient"
-      style="width: 80%; height: 400px; margin: 20px auto"
+      style="width: 90%; height: 400px; margin: 20px auto"
     ></div>
     <div
       id="workHoursDistribution"
-      style="width: 80%; height: 400px; margin: 20px auto"
+      style="width: 90%; height: 400px; margin: 20px auto"
     ></div>
   </body>
 </html>

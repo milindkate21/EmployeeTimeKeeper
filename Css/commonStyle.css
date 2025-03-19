@@ -2,6 +2,73 @@ body {
   font-family: "Inter", sans-serif;
 }
 
+#dashboard {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  padding: 20px;
+}
+
+#alertContainer {
+  margin: 10px;
+}
+
+/*Home page layout code*/
+.metrics {
+  display: flex;
+  justify-content: space-between;
+  background-color: #f0f0f0;
+  gap: 20px;
+  margin-top: 20px;
+  padding: 10px;
+  border-radius: 8px;
+  width: 100%;
+  flex-wrap: nowrap;
+}
+
+.metric-box {
+  background-color: #f0f4f8;
+  border-radius: 10px;
+  padding: 20px;
+  flex: 1 1 22%;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  transition: all 0.3s ease;
+  min-width: 280px;
+  height: 180px;
+}
+
+.metric-box h3 {
+  text-transform: uppercase;
+  font-size: 18px;
+  color: #333;
+  margin: 0;
+  flex-shrink: 0;
+}
+
+.metric-box p {
+  font-size: 25px;
+  color: #007bff;
+  font-weight: bold;
+  margin: 0;
+  padding: 0;
+  flex-grow: 1;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100%;
+}
+
+.metric-box:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
+}
+
+/* Employee Form page code */
 #employeeForm {
   max-width: 600px;
   margin: 0 auto;
@@ -228,10 +295,32 @@ table.dataTable {
     display: block;
     text-align: left;
   }
+
+  /* Stacking the metric boxes vertically on smaller screens */
+  .metrics {
+    flex-direction: column; /* Stack the boxes vertically */
+    gap: 15px; /* Reduce gap for small screens */
+  }
+
+  .metric-box {
+    flex: 1 1 100%; /* Make each box take full width */
+    min-width: unset; /* Remove minimum width to allow flexibility */
+    height: auto; /* Allow height to adjust based on content */
+  }
 }
 
 /* Small Screens (Below 400px) - Full Stack */
 @media (max-width: 400px) {
+  metrics {
+    flex-direction: column; /* Stack the metric boxes vertically */
+    gap: 10px; /* Reduce gap further */
+  }
+
+  .metric-box {
+    flex: 1 1 100%; /* Ensure each box takes up 100% of width */
+    height: auto; /* Allow height to adjust */
+  }
+
   .date-container {
     display: block;
   }
@@ -270,9 +359,9 @@ table.dataTable {
   border: none;
 }
 .dataTables_wrapper .dt-buttons .buttons-excel:hover {
-  background-color: #0056b3; /* Darker shade of blue for hover */
-  color: white; /* Keep text color white on hover */
-  cursor: pointer; /* Change cursor to pointer on hover */
+  background-color: #0056b3;
+  color: white;
+  cursor: pointer;
 }
 #reportLabel {
   padding: 10px;

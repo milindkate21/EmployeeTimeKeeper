@@ -110,9 +110,11 @@ document.addEventListener("DOMContentLoaded", function () {
         );
 
         if (!selectedRadio) {
-          return alert(
-            "Please select either 'Start Kilometer' or 'End Kilometer'."
+          showBootstrapAlert(
+            "Please select either 'Start Kilometer' or 'End Kilometer'.",
+            "danger"
           );
+          return;
         }
 
         selectedRadioValue = selectedRadio ? selectedRadio.value : "";
@@ -124,14 +126,17 @@ document.addEventListener("DOMContentLoaded", function () {
         }
 
         if (!kiloNumber.value.trim()) {
-          return alert("Please enter a value for Kilometers.");
+          showBootstrapAlert("Please enter a value for Kilometers.", "danger");
+          return;
         }
       } else {
         if (!empname) {
-          return alert("Please enter a client name.");
+          showBootstrapAlert("Please enter a client name.", "danger");
+          return;
         }
         if (!emplocation) {
-          return alert("Please enter a location.");
+          showBootstrapAlert("Please enter a location.", "danger");
+          return;
         }
       }
       const username = localStorage.getItem("username");
@@ -147,7 +152,11 @@ document.addEventListener("DOMContentLoaded", function () {
       if (empstartTime && empendTime) {
         emphoursWorked = calculateHoursWorked(empstartTime, empendTime);
       } else {
-        return alert("Please enter both Start Time and End Time.");
+        showBootstrapAlert(
+          "Please enter both Start Time and End Time.",
+          "danger"
+        );
+        return;
       }
 
       const UID = generateUID();
@@ -174,12 +183,13 @@ document.addEventListener("DOMContentLoaded", function () {
         });
 
         employeeForm.reset();
-        alert("Employee data submitted successfully!");
+        showBootstrapAlert("Employee data submitted successfully!", "success");
         $("#empname, #emplocation").prop("disabled", false);
         getEmployeeFormData(convertDate(getFormattedCurrentDate()));
       } catch (e) {
         console.error("Error adding document: ", e.message);
-        alert("Failed to submit data.");
+        showBootstrapAlert("Failed to submit data.", "danger");
+        return;
       }
     });
   }
@@ -281,11 +291,12 @@ $("#employeeTable tbody").on("click", ".delete-btn", function () {
             }
           })
           .draw();
-        alert("Record deleted successfully.");
+        showBootstrapAlert("Record deleted successfully.", "success");
       })
       .catch((error) => {
         console.error("Error deleting document: ", error);
-        alert("Failed to delete the record.");
+        showBootstrapAlert("Failed to delete the record.", "danger");
+        return;
       });
   }
 });
@@ -359,4 +370,26 @@ function calculateHoursWorked(startTime, endTime) {
 }
 function formatKilometers(kilometers) {
   return `${kilometers.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")} km`;
+}
+
+// Function to show Bootstrap alert box
+function showBootstrapAlert(message, type) {
+  const alertContainer = document.getElementById("alertContainer");
+  if (alertContainer) {
+    const alertBox = document.createElement("div");
+    alertBox.className = `alert alert-${type} alert-dismissible fade show`;
+    alertBox.role = "alert";
+    alertBox.innerHTML = `
+      ${message}
+      <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    `;
+    alertContainer.appendChild(alertBox);
+
+    // Scroll to the alert container to ensure visibility
+    alertContainer.scrollIntoView({ behavior: "smooth", block: "center" });
+
+    setTimeout(() => {
+      alertBox.remove();
+    }, 5000);
+  }
 }
